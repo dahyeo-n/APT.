@@ -2,13 +2,18 @@ import type { Metadata } from 'next';
 import './globals.css';
 import localFont from 'next/font/local';
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
+const GmarketSansTTFLight = localFont({
+  src: './fonts/GmarketSansTTFLight.ttf',
   variable: '--font-geist-sans',
   weight: '100 900',
 });
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
+const GmarketSansTTFMedium = localFont({
+  src: './fonts/GmarketSansTTFMedium.ttf',
+  variable: '--font-geist-mono',
+  weight: '100 900',
+});
+const GmarketSansTTFBold = localFont({
+  src: './fonts/GmarketSansTTFBold.ttf',
   variable: '--font-geist-mono',
   weight: '100 900',
 });
@@ -26,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
         {children}
       </body>
