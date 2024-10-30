@@ -4,6 +4,7 @@ import RecoilProvider from '@/lib/RecoilProvider';
 
 import './globals.css';
 import localFont from 'next/font/local';
+import TanstackQueryProvider from '@/lib/TanstackQueryProvider';
 
 const GmarketSansTTFLight = localFont({
   src: './fonts/GmarketSansTTFLight.ttf',
@@ -40,10 +41,12 @@ export default function RootLayout({
       <body
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
-        <RecoilProvider>
-          {/* <NavBar /> */}
-          {children}
-        </RecoilProvider>
+        <TanstackQueryProvider>
+          <RecoilProvider>
+            {/* <NavBar /> */}
+            {children}
+          </RecoilProvider>
+        </TanstackQueryProvider>
       </body>
     </html>
   );
