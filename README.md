@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1>APT. (Apateu, 아파트)</h1>
 
-## Getting Started
+## 배포 주소
 
-First, run the development server:
+https://apatue.vercel.app
+
+## 0. 프로젝트 소개
+
+> **집중 개발 기간: 2024. 10. 30 ~ **
+
+APT.는 '**🇰🇷 한국의 술게임인 아파트 게임을 하고, 게임 결과를 공유할 수 있는 서비스**'입니다.
+
+## 폴더 구조
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+├── app/
+│ ├── layout.tsx // 공통 레이아웃 설정
+│ ├── game/
+│ │ ├── page.tsx // 게임 플레이 페이지
+│ │ ├── result/
+│ │ │ └── page.tsx // 게임 결과 페이지
+│ │ └── tutorial/
+│ │ └── page.tsx // 게임 튜토리얼 페이지
+│ └── page.tsx // 홈 페이지
+├── providers/ // 상태 관리 및 설정 제공 컴포넌트
+│ ├── TanstackQueryProvider.tsx
+│ └── RecoilProvider.tsx
+├── components/ // 재사용 가능한 컴포넌트들
+├── hooks/ // 커스텀 훅
+├── services/ // API 요청 및 Supabase 관련 함수
+├── styles/ // Tailwind 및 전역 스타일 관련 파일
+├── lib/ // 라이브러리 관련 파일
+├── types/ // 타입 정의 파일
+└── public/ // 정적 파일
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

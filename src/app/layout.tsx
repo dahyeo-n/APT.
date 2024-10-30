@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 
-import RecoilProvider from '@/lib/RecoilProvider';
+import RecoilProvider from '@/providers/RecoilProvider';
 
-import './globals.css';
+import '../styles/globals.css';
 import localFont from 'next/font/local';
-import TanstackQueryProvider from '@/lib/TanstackQueryProvider';
+import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
 
 const GmarketSansTTFLight = localFont({
   src: './fonts/GmarketSansTTFLight.ttf',
