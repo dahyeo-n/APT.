@@ -4,8 +4,7 @@ import NextUIAndThemesProvider from '@/providers/NextUIProvider';
 import RecoilProvider from '@/providers/RecoilProvider';
 import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
 
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import LoadingWrapper from '@/components/LoadingWrapper';
 
 import '../styles/globals.css';
 import localFont from 'next/font/local';
@@ -48,9 +47,7 @@ export default function RootLayout({
         <NextUIAndThemesProvider>
           <RecoilProvider>
             <TanstackQueryProvider>
-              <Navbar />
-              {children}
-              <Footer />
+              <LoadingWrapper>{children}</LoadingWrapper>
             </TanstackQueryProvider>
           </RecoilProvider>
         </NextUIAndThemesProvider>

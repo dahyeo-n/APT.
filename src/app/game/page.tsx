@@ -1,5 +1,3 @@
-import React from 'react';
-
 const GamePlayPage = () => {
   return (
     <div className='flex flex-col justify-center items-center p-5'>
