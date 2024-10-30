@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import './globals.css';
 import localFont from 'next/font/local';
 
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
   title: 'APT.',
   description:
     '🇰🇷 한국의 술게임인 아파트 게임을 하고, 게임 결과를 공유할 수 있는 서비스',
+  icons: {
+    icon: '/images/APT-Logo.png',
+  },
 };
 
 export default function RootLayout({
