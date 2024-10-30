@@ -23,9 +23,9 @@ const BackButtonSwitcher = () => {
         }
         fill='none'
         viewBox='0 0 24 24'
-        strokeWidth={1.5}
+        strokeWidth={1.3}
         stroke='currentColor'
-        className='size-6'
+        className='size-8'
       >
         <path
           strokeLinecap='round'
