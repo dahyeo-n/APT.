@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 
+import NextUIAndThemesProvider from '@/providers/NextUIProvider';
 import RecoilProvider from '@/providers/RecoilProvider';
+import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
+
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 import '../styles/globals.css';
 import localFont from 'next/font/local';
-import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
 
 const GmarketSansTTFLight = localFont({
   src: './fonts/GmarketSansTTFLight.ttf',
@@ -27,7 +31,7 @@ export const metadata: Metadata = {
   description:
     '🇰🇷 한국의 술게임인 아파트 게임을 하고, 게임 결과를 공유할 수 있는 서비스',
   icons: {
-    icon: '/images/APT-Logo.png',
+    icon: '/images/APTFavicon.png',
   },
 };
 
@@ -41,12 +45,15 @@ export default function RootLayout({
       <body
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
-        <TanstackQueryProvider>
+        <NextUIAndThemesProvider>
           <RecoilProvider>
-            {/* <NavBar /> */}
-            {children}
+            <TanstackQueryProvider>
+              <Navbar />
+              {children}
+              <Footer />
+            </TanstackQueryProvider>
           </RecoilProvider>
-        </TanstackQueryProvider>
+        </NextUIAndThemesProvider>
       </body>
     </html>
   );
