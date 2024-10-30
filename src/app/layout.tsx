@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import RecoilProvider from '@/lib/RecoilProvider';
+
 import './globals.css';
 import localFont from 'next/font/local';
 
@@ -38,7 +40,10 @@ export default function RootLayout({
       <body
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
-        {children}
+        <RecoilProvider>
+          {/* <NavBar /> */}
+          {children}
+        </RecoilProvider>
       </body>
     </html>
   );
