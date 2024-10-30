@@ -4,8 +4,8 @@ import logo from '../../public/images/APTLogo.png';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ThemeSwitcher } from './navbarSwitchers/ThemeSwitcher';
-import BackButtonSwitcher from './navbarSwitchers/BackButtonSwitcher';
+import { ThemeSwitcher } from './navbarButtons/ThemeSwitcher';
+import BackButtonSwitcher from './navbarButtons/BackButtonSwitcher';
 
 const Navbar = () => {
   return (
