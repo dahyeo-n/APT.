@@ -4,7 +4,7 @@ const InitialLoadingScreen = () => {
       <img
         src='/images/APTLogo.png'
         alt='APT. Logo'
-        className='w-48 animate-bounce'
+        className='w-28 animate-bounce'
       />
     </div>
   );

@@ -15,7 +15,6 @@ const LoadingWrapper = ({ children }: LoadingWrapperProps) => {
 
   useEffect(() => {
     const hasLoadedBefore = sessionStorage.getItem('hasLoadedBefore');
-    console.log('hasLoadedBefore', hasLoadedBefore);
 
     if (hasLoadedBefore) {
       setIsLoading(false);

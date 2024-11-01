@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 
 import NextUIAndThemesProvider from '@/providers/NextUIProvider';
-import RecoilProvider from '@/providers/RecoilProvider';
-import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
+import TanstackQueryandRecoilProvider from '@/providers/TanstackQueryandRecoilProvider';
 
 import LoadingWrapper from '@/components/LoadingWrapper';
 
@@ -45,11 +44,9 @@ export default function RootLayout({
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
         <NextUIAndThemesProvider>
-          <RecoilProvider>
-            <TanstackQueryProvider>
-              <LoadingWrapper>{children}</LoadingWrapper>
-            </TanstackQueryProvider>
-          </RecoilProvider>
+          <TanstackQueryandRecoilProvider>
+            <LoadingWrapper>{children}</LoadingWrapper>
+          </TanstackQueryandRecoilProvider>
         </NextUIAndThemesProvider>
       </body>
     </html>
