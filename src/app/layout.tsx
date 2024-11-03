@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
-
-import NextUIAndThemesProvider from '@/providers/NextUIProvider';
-import TanstackQueryandRecoilProvider from '@/providers/TanstackQueryandRecoilProvider';
-
-import LoadingWrapper from '@/components/LoadingWrapper';
-
-import '../styles/globals.css';
 import localFont from 'next/font/local';
+import QueryProviders from '@/app/providers';
 
 const GmarketSansTTFLight = localFont({
   src: './fonts/GmarketSansTTFLight.ttf',
@@ -40,14 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ko'>
+      <head></head>
       <body
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >
-        <NextUIAndThemesProvider>
-          <TanstackQueryandRecoilProvider>
-            <LoadingWrapper>{children}</LoadingWrapper>
-          </TanstackQueryandRecoilProvider>
-        </NextUIAndThemesProvider>
+        <QueryProviders>{children}</QueryProviders>
       </body>
     </html>
   );

@@ -11,18 +11,18 @@ interface LoadingWrapperProps {
 }
 
 const LoadingWrapper = ({ children }: LoadingWrapperProps) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const hasLoadedBefore = sessionStorage.getItem('hasLoadedBefore');
 
-    if (hasLoadedBefore) {
-      setIsLoading(false);
-    } else {
+    if (!hasLoadedBefore) {
+      setIsLoading(true);
       const timer = setTimeout(() => {
         setIsLoading(false);
         sessionStorage.setItem('hasLoadedBefore', 'true');
       }, 2000);
+
       return () => clearTimeout(timer);
     }
   }, []);

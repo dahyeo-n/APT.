@@ -25,8 +25,10 @@ const ScrollToTopButton = () => {
       onClick={scrollToTop}
       className={`${
         showButton ? 'opacity-100' : 'opacity-0'
-      } fixed z-50 bottom-10 right-10 rounded-full shadow-md ${
-        theme === 'light' ? 'hover:bg-pink-100' : 'hover:bg-pink-600'
+      } fixed z-50 bottom-32 right-10 w-10 h-10 rounded-full shadow-md flex items-center justify-center ${
+        theme === 'light'
+          ? 'hover:bg-zinc-100'
+          : 'bg-zinc-900 hover:bg-pink-500'
       } transition-opacity duration-300`}
       style={{ transition: 'opacity 0.3s' }}
     >
@@ -39,14 +41,14 @@ const ScrollToTopButton = () => {
         }
         fill='none'
         viewBox='0 0 24 24'
-        strokeWidth='1.5'
         stroke='currentColor'
-        className='w-10 h-10'
+        strokeWidth={1.5}
+        className='w-6'
       >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'
-          d='m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+          d='M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18'
         />
       </svg>
     </button>

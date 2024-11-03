@@ -12,7 +12,7 @@ const Navbar = () => {
     <div className='flex items-center justify-between p-5'>
       <BackButtonSwitcher />
       <Link href='/'>
-        <Image src={logo} alt='APT. 로고' width={50} />
+        <Image src={logo} alt='APT. 로고' width={50} priority />
       </Link>
       <ThemeSwitcher />
     </div>

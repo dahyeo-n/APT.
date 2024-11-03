@@ -1,13 +1,17 @@
+import { type Config } from 'tailwindcss';
 import { nextui } from '@nextui-org/react';
 
-module.exports = {
+const config: Config = {
   content: [
-    './src/**/*.{js,ts,jsx,tsx}', // Next.js 파일들이 위치한 경로 설정
+    './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/react/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},
   },
+  important: true,
   darkMode: 'class',
   plugins: [nextui()],
 };
+
+export default config;
