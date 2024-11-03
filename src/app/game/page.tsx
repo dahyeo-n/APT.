@@ -14,7 +14,6 @@ const GamePlayPage = () => {
       <p className='mt-4 text-gray-600 md:mt-0 md:ml-4'>
         아파트 게임 설명 및 규칙
       </p>
-      <Button>Next UI 버튼</Button>
     </div>
   );
 };
