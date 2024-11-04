@@ -1,7 +1,5 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
-
 const GamePlayPage = () => {
   return (
     <div className='flex flex-col justify-center items-center p-5 font-[family-name:var(--font-geist-sans)]'>

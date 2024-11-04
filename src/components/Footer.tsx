@@ -11,9 +11,10 @@ const Footer = () => {
     <div className='flex flex-col justify-center items-center p-5 mb-4 font-[family-name:var(--font-geist-sans)]'>
       <ScrollToTopButton />
       <UserFeedbackButton />
-      <p className='text-gray-500 text-xs mb-5'>
+      <p className='text-gray-500 text-sm mb-5'>
         Copyright ⓒ Dahyeon JIN. All Rights Reserved.
       </p>
+
       <div className='flex'>
         <GitHubButton />
         <EmailButton />

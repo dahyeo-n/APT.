@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { useTheme } from 'next-themes';
 import {
   Modal,
@@ -9,23 +10,92 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
+  Tabs,
+  Tab,
+  Input,
 } from '@nextui-org/react';
+
+import { BulbIcon } from './footerIcons/BulbIcon';
+import { SpeechBubbleIcon } from './footerIcons/SpeechBubbleIcon';
+import { ErrorIcon } from './footerIcons/ErrorIcon';
+import { RequestIcon } from './footerIcons/RequestIcon';
+import { CheckIcon } from './footerIcons/CheckIcon';
+import { PaperAirplaneIcon } from './footerIcons/PaperAirplaneIcon';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const UserFeedbackButton = () => {
   const { theme } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [feedbackType, setFeedbackType] = useState('errorRequest');
+  const [feedbackType, setFeedbackType] = useState('에러');
   const [email, setEmail] = useState('');
   const [content, setContent] = useState('');
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [emailCheckColor, setEmailCheckColor] = useState('');
 
   const handleToggleModal = () => setIsModalOpen(!isModalOpen);
   const handleFeedbackTypeChange = (type: string) => setFeedbackType(type);
-  const handleSendFeedback = () => {
-    alert('Feedback submitted!');
-    setIsModalOpen(false);
+
+  const validateForm = (email: string, content: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(email);
+    return {
+      isFormValid: isEmailValid && content.trim() !== '',
+      emailCheckColor: !email
+        ? ''
+        : isEmailValid
+        ? 'text-green-500'
+        : 'text-red-500',
+    };
+  };
+
+  useEffect(() => {
+    const { isFormValid, emailCheckColor } = validateForm(email, content);
+    setIsFormValid(isFormValid);
+    setEmailCheckColor(emailCheckColor);
+  }, [email, content]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+
+    const { isFormValid, emailCheckColor } = validateForm(email, content);
+    setIsFormValid(isFormValid);
+    setEmailCheckColor(emailCheckColor);
+  };
+
+  const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
+
+    if (e.target.scrollHeight > 160) {
+      e.target.style.height = '160px';
+      e.target.style.overflowY = 'scroll';
+    }
+
+    setContent(e.target.value);
+
+    const { isFormValid } = validateForm(email, content);
+    setIsFormValid(isFormValid);
+  };
+
+  const handleSendFeedback = async () => {
+    try {
+      const nowKST = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+
+      const { error } = await supabase
+        .from('User_Requests')
+        .insert([{ type: feedbackType, email, content, created_at: nowKST }]);
+
+      error && console.error('피드백 제출 중 오류 발생:', error.message);
+      !error && alert('제출 완료!');
+      setEmail('');
+      setContent('');
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('피드백 제출 중 오류 발생: ', error);
+    }
   };
 
   return (
@@ -38,127 +108,121 @@ const UserFeedbackButton = () => {
             : 'bg-zinc-900 hover:bg-pink-500'
         } transition-colors duration-300`}
       >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          filter={
-            theme === 'light'
-              ? 'invert(17%) sepia(82%) saturate(5617%) hue-rotate(331deg) brightness(98%) contrast(101%)'
-              : ''
-          }
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-          strokeWidth={1.5}
-          className='w-6'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18'
-          />
-        </svg>
+        <BulbIcon theme={theme ?? 'light'} />
       </button>
 
-      {isModalOpen && (
-        <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
-          <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80'>
-            {/* Close Button */}
-            <button
-              onClick={handleToggleModal}
-              className='absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white'
-            >
-              &times;
-            </button>
-
-            {/* Feedback Type Toggle */}
-            <div className='mb-4'>
-              <label className='inline-flex items-center mr-4'>
-                <input
-                  type='radio'
-                  className='form-radio'
-                  checked={feedbackType === 'errorRequest'}
-                  onChange={() => handleFeedbackTypeChange('errorRequest')}
-                />
-                <span className='ml-2'>에러</span>
-              </label>
-              <label className='inline-flex items-center'>
-                <input
-                  type='radio'
-                  className='form-radio'
-                  checked={feedbackType === 'developerMessage'}
-                  onChange={() => handleFeedbackTypeChange('developerMessage')}
-                />
-                <span className='ml-2'>요청사항</span>
-              </label>
-            </div>
-
-            {/* Feedback Form */}
-            <div className='mb-4'>
-              <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder='이메일'
-                className='w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white'
-              />
-            </div>
-            <div className='mb-4'>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder='내용을 입력하세요'
-                className='w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white'
-                rows={3}
-              ></textarea>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              onClick={handleSendFeedback}
-              className='w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-md'
-            >
-              전송하기
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className='flex flex-col gap-2'>
-        <Button onPress={onOpen} className='max-w-fit'>
-          Open Modal
-        </Button>
-        <Modal isOpen={isOpen} placement='bottom' onOpenChange={onOpenChange}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className='flex flex-col gap-1'>
-                  Modal Title
-                </ModalHeader>
-                <ModalBody>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nullam pulvinar risus non risus hendrerit venenatis.
-                    Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                  </p>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nullam pulvinar risus non risus hendrerit venenatis.
-                    Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                  </p>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color='danger' variant='light' onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color='primary' onPress={onClose}>
-                    Action
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </div>
+      <Modal
+        className='font-[family-name:var(--font-geist-sans)]'
+        isOpen={isModalOpen}
+        onOpenChange={handleToggleModal}
+        scrollBehavior='inside'
+        placement='bottom'
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className='flex items-center gap-2'>
+                <SpeechBubbleIcon />
+                에러/요청사항
+              </ModalHeader>
+              <ModalBody>
+                <Tabs
+                  className='flex justify-center mb-2'
+                  color='secondary'
+                  variant='bordered'
+                  selectedKey={feedbackType}
+                  onSelectionChange={(key) =>
+                    handleFeedbackTypeChange(key as string)
+                  }
+                >
+                  <Tab
+                    key='에러'
+                    onChange={() => handleFeedbackTypeChange('에러')}
+                    title={
+                      <div className='flex items-center space-x-2'>
+                        <ErrorIcon />
+                        <span>에러</span>
+                      </div>
+                    }
+                  />
+                  <Tab
+                    key='요청사항'
+                    onChange={() => handleFeedbackTypeChange('요청사항')}
+                    title={
+                      <div className='flex items-center space-x-2'>
+                        <RequestIcon />
+                        <span>요청사항</span>
+                      </div>
+                    }
+                  />
+                </Tabs>
+                <div id='emailInput' className='mb-2'>
+                  <Input
+                    isRequired
+                    className='mb-2'
+                    type='email'
+                    label='이메일'
+                    labelPlacement='outside'
+                    variant='faded'
+                    placeholder='이메일을 입력해주세요.'
+                    onChange={handleEmailChange}
+                  />
+                  <div
+                    id='emailCheck'
+                    className={`flex items-center gap-1 ${emailCheckColor}`}
+                  >
+                    <CheckIcon />
+                    <span className='text-xs'>
+                      이메일 형식에 맞춰주세요 (example@gmail.com)
+                    </span>
+                  </div>
+                </div>
+                <div id='contentTextarea'>
+                  <div
+                    className='group flex flex-col is-filled'
+                    data-filled-within='true'
+                  >
+                    <label
+                      htmlFor='content'
+                      className="z-10 subpixel-antialiased text-sm text-foreground-500 after:content-['*'] after:text-danger after:ml-0.5 group-data-[filled-within=true]:text-foreground pb-1.5"
+                    >
+                      내용
+                    </label>
+                  </div>
+                  <textarea
+                    id='content'
+                    required
+                    className={`w-full px-3 py-2 text-sm ${
+                      theme === 'light'
+                        ? 'bg-zinc-100 border-neutral-200 hover:border-zinc-400 placeholder:text-zinc-500'
+                        : 'bg-zinc-800 border-zinc-700 hover:border-zinc-500'
+                    } border-2  rounded-xl shadow-sm resize-none overflow-y-auto`}
+                    rows={1}
+                    placeholder='내용을 입력해주세요.'
+                    value={content}
+                    onInput={handleContent}
+                    style={{ maxHeight: '160px' }}
+                  />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  className='w-full'
+                  color='secondary'
+                  isDisabled={!isFormValid}
+                  onClick={() => {
+                    handleSendFeedback();
+                    onClose();
+                  }}
+                >
+                  <PaperAirplaneIcon />
+                  <span>제출하기</span>
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
