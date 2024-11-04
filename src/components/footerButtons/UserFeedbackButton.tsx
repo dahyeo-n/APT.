@@ -88,11 +88,14 @@ const UserFeedbackButton = () => {
         .from('User_Requests')
         .insert([{ type: feedbackType, email, content, created_at: nowKST }]);
 
-      error && console.error('피드백 제출 중 오류 발생:', error.message);
-      !error && alert('제출 완료!');
-      setEmail('');
-      setContent('');
-      setIsModalOpen(false);
+      if (error) {
+        console.error('피드백 제출 중 오류 발생:', error.message);
+      } else {
+        alert('제출 완료!');
+        setEmail('');
+        setContent('');
+        setIsModalOpen(false);
+      }
     } catch (error) {
       console.error('피드백 제출 중 오류 발생: ', error);
     }
