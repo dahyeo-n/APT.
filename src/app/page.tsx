@@ -6,14 +6,16 @@ import Link from 'next/link';
 
 import { supabase } from '../services/supabaseClient';
 import { addChat, fetchChats } from '../services/chats';
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { chatQueryKeys } from '@/queryKeys';
+
+import { Chat } from '@/types/types';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
 import { AnonymousChat } from '@/components/home/AnonymousChat';
 import { VideoCameraIcon } from '@/components/icons/homePageIcons/VideoCameraIcon';
-
-import { Chat } from '@/types/types';
 
 import { useTheme } from 'next-themes';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
@@ -41,7 +43,7 @@ const generateRandomNickname = () => {
 // NOTE: 현재 몇 명이 접속해있는지 추적하는 기능
 // NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
 // NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
-// TODO: Tanstak Query 쿼리키 폴더 및 파일 생성 -> 따로 저장
+// NOTE: Tanstack Query 쿼리키 폴더 및 파일 생성 -> 따로 저장
 // TODO: 유튜브 영상 띄우기, 컴포넌트 분리
 
 export default function HomePage() {
@@ -80,7 +82,7 @@ export default function HomePage() {
   }, []);
 
   const { data: chats, refetch } = useQuery<Chat[]>({
-    queryKey: ['chats'],
+    queryKey: chatQueryKeys.chats,
     queryFn: fetchChats,
   });
 
@@ -89,7 +91,7 @@ export default function HomePage() {
   const chatMutation = useMutation({
     mutationFn: (newChat: string) => addChat(newChat, nickname),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      queryClient.invalidateQueries({ queryKey: chatQueryKeys.chats });
       setNewChat('');
       await refetch();
 
