@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { supabase } from '../services/supabaseClient';
-import { fetchComments, addComment } from '../services/comments';
+import { addChat, fetchChats } from '../services/chats';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
@@ -13,7 +13,7 @@ import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
 import { AnonymousChat } from '@/components/home/AnonymousChat';
 import { VideoCameraIcon } from '@/components/icons/homePageIcons/VideoCameraIcon';
 
-import { Comment } from '@/types/types';
+import { Chat } from '@/types/types';
 
 import { useTheme } from 'next-themes';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
@@ -40,14 +40,15 @@ const generateRandomNickname = () => {
 
 // NOTE: 현재 몇 명이 접속해있는지 추적하는 기능
 // NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
-// TODO: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
+// NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
+// TODO: Tanstak Query 쿼리키 폴더 및 파일 생성 -> 따로 저장
 // TODO: 유튜브 영상 띄우기, 컴포넌트 분리
 
 export default function HomePage() {
   const { theme } = useTheme();
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [nickname] = useState(generateRandomNickname());
-  const [newComment, setNewComment] = useState('');
+  const [newChat, setNewChat] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -78,18 +79,18 @@ export default function HomePage() {
     };
   }, []);
 
-  const { data: comments, refetch } = useQuery<Comment[]>({
-    queryKey: ['comments'],
-    queryFn: fetchComments,
+  const { data: chats, refetch } = useQuery<Chat[]>({
+    queryKey: ['chats'],
+    queryFn: fetchChats,
   });
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const commentMutation = useMutation({
-    mutationFn: (newComment: string) => addComment(newComment, nickname),
+  const chatMutation = useMutation({
+    mutationFn: (newChat: string) => addChat(newChat, nickname),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
-      setNewComment('');
+      queryClient.invalidateQueries({ queryKey: ['chats'] });
+      setNewChat('');
       await refetch();
 
       // TODO: 최신 댓글로 스크롤 조정 기능 - 더 좋은 방법 강구해보기
@@ -104,9 +105,9 @@ export default function HomePage() {
       console.error('채팅 작성 중 오류가 발생했습니다.', error.message),
   });
 
-  const handleSubmitComment = () => {
-    if (newComment.trim() === '') return;
-    commentMutation.mutate(newComment);
+  const handleSubmitChat = () => {
+    if (newChat.trim() === '') return;
+    chatMutation.mutate(newChat);
   };
 
   return (
@@ -145,10 +146,10 @@ export default function HomePage() {
         <AnonymousChat
           ref={scrollContainerRef}
           scrollContainerRef={scrollContainerRef}
-          comments={comments ?? []}
-          newComment={newComment}
-          setNewComment={setNewComment}
-          handleSubmitComment={handleSubmitComment}
+          chats={chats ?? []}
+          newChat={newChat}
+          setNewChat={setNewChat}
+          handleSubmitChat={handleSubmitChat}
         />
         <Card className='py-3 w-full'>
           <CardHeader className='px-5 flex-row'>

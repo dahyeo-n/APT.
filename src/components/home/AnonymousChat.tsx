@@ -19,13 +19,7 @@ import { useTheme } from 'next-themes';
 
 export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
   (
-    {
-      comments,
-      newComment,
-      setNewComment,
-      handleSubmitComment,
-      scrollContainerRef,
-    },
+    { chats, newChat, setNewChat, handleSubmitChat, scrollContainerRef },
     ref
   ) => {
     const { theme } = useTheme();
@@ -38,13 +32,13 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             익명 채팅
           </h4>
           <span className='text-tiny text-default-500 ml-2'>
-            {comments ? comments.length : 0}개
+            {chats ? chats.length : 0}개
           </span>
         </CardHeader>
         <div className='max-h-[350px] overflow-y-auto' ref={ref}>
-          {(comments ?? []).map((comment) => (
+          {(chats ?? []).map((chat) => (
             <CardBody
-              key={comment.comment_id}
+              key={chat.chat_id}
               className='px-5 text-sm text-default-600'
             >
               <div className='flex items-start gap-4'>
@@ -61,14 +55,14 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
                         theme === 'light' ? 'text-zinc-500' : 'text-zinc-400'
                       }`}
                     >
-                      {comment.nickname}
+                      {chat.nickname}
                     </h4>
                     <h5
                       className={`text-xs tracking-tight ${
                         theme === 'light' ? 'text-zinc-400' : 'text-zinc-500'
                       }`}
                     >
-                      {formatTimeAgo(comment.created_at)}
+                      {formatTimeAgo(chat.created_at)}
                     </h5>
                   </div>
                   <span
@@ -76,7 +70,7 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
                       theme === 'light' ? 'text-zinc-900' : 'text-zinc-200'
                     }`}
                   >
-                    {comment.content.split('\n').map((line, index) => (
+                    {chat.content.split('\n').map((line, index) => (
                       <React.Fragment key={index}>
                         {line}
                         <br />
@@ -97,8 +91,8 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
               className='flex-shrink-0'
             />
             <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              value={newChat}
+              onChange={(e) => setNewChat(e.target.value)}
               onInput={adjustTextareaScrolling}
               rows={1}
               className='resize-none flex-1 px-4 py-2 text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-zinc-800 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'
@@ -106,8 +100,8 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             />
             <Button
               size='sm'
-              onClick={handleSubmitComment}
-              isDisabled={!newComment.trim()}
+              onClick={handleSubmitChat}
+              isDisabled={!newChat.trim()}
               className='flex text-white justify-center items-center rounded-full h-9 p-2 bg-gradient-to-r from-sky-400 to-violet-500 hover:from-pink-400 hover:to-violet-500 cursor-pointer transition-color'
             >
               <svg

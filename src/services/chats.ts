@@ -1,9 +1,9 @@
 import { supabase } from '../services/supabaseClient';
-import { Comment } from '@/types/types';
+import { Chat } from '@/types/types';
 
-export const fetchComments = async (): Promise<Comment[]> => {
+export const fetchChats = async (): Promise<Chat[]> => {
   const { data, error } = await supabase
-    .from('Comments')
+    .from('Chats')
     .select('*')
     .order('created_at', { ascending: true });
 
@@ -11,17 +11,17 @@ export const fetchComments = async (): Promise<Comment[]> => {
   return data;
 };
 
-export const addComment = async (
-  newComment: string,
+export const addChat = async (
+  newChat: string,
   nickname: string
-): Promise<Comment[] | null> => {
+): Promise<Chat[] | null> => {
   const { data, error } = await supabase
-    .from('Comments')
+    .from('Chats')
     .insert([
       {
-        content: newComment,
-        created_at: new Date().toISOString(),
         nickname,
+        content: newChat,
+        created_at: new Date().toISOString(),
       },
     ])
     .select('*');
