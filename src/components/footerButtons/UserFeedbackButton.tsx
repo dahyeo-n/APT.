@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../../services/supabaseClient';
+
 import { useTheme } from 'next-themes';
 import {
   Modal,
@@ -15,16 +16,13 @@ import {
   Input,
 } from '@nextui-org/react';
 
-import { BulbIcon } from './footerIcons/BulbIcon';
-import { SpeechBubbleIcon } from './footerIcons/SpeechBubbleIcon';
-import { ErrorIcon } from './footerIcons/ErrorIcon';
-import { RequestIcon } from './footerIcons/RequestIcon';
-import { CheckIcon } from './footerIcons/CheckIcon';
-import { PaperAirplaneIcon } from './footerIcons/PaperAirplaneIcon';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { BulbIcon } from '../icons/footerIcons/BulbIcon';
+import { SpeechBubbleIcon } from '../icons/footerIcons/SpeechBubbleIcon';
+import { ErrorIcon } from '../icons/footerIcons/ErrorIcon';
+import { RequestIcon } from '../icons/footerIcons/RequestIcon';
+import { CheckIcon } from '../icons/footerIcons/CheckIcon';
+import { PaperAirplaneIcon } from '../icons/footerIcons/PaperAirplaneIcon';
+import { adjustTextareaScrolling } from '@/utils/adjustTextareaScrolling';
 
 const UserFeedbackButton = () => {
   const { theme } = useTheme();
@@ -66,13 +64,7 @@ const UserFeedbackButton = () => {
   };
 
   const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = 'auto';
-    e.target.style.height = `${e.target.scrollHeight}px`;
-
-    if (e.target.scrollHeight > 160) {
-      e.target.style.height = '160px';
-      e.target.style.overflowY = 'scroll';
-    }
+    adjustTextareaScrolling(e);
 
     setContent(e.target.value);
 

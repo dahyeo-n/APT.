@@ -1,99 +1,170 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+
+import { supabase } from '../services/supabaseClient';
+import { fetchComments, addComment } from '../services/comments';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
+import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
+import { AnonymousChat } from '@/components/home/AnonymousChat';
+import { VideoCameraIcon } from '@/components/icons/homePageIcons/VideoCameraIcon';
+
+import { Comment } from '@/types/types';
+
+import { useTheme } from 'next-themes';
+import { Card, CardHeader, CardBody } from '@nextui-org/react';
+
+const generateRandomNickname = () => {
+  const nicknames = [
+    '연차쓴루피',
+    '어리둥절고양이',
+    '넘어갈게요',
+    '망그러진곰',
+    'T1롤드컵5회우승축하해',
+    '페이커의F점멸',
+    '흑백벨루가',
+    '마루킁킁',
+    '마루쫑긋',
+    '브루노업고튀어',
+    '잘자요아가씨',
+    '침착맨',
+    '밈그만보라고?너누군데',
+    '너는무슨헤어지자는말을나밥볶을때하니',
+  ];
+  return nicknames[Math.floor(Math.random() * nicknames.length)];
+};
+
+// NOTE: 현재 몇 명이 접속해있는지 추적하는 기능
+// NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
+// TODO: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
+// TODO: 유튜브 영상 띄우기, 컴포넌트 분리
 
 export default function HomePage() {
-  return (
-    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
-      <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start'>
-        <Image
-          className='dark:invert'
-          src='/next.svg'
-          alt='Next.js logo'
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className='list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]'>
-          <li className='mb-2'>Next UI야 왜 안 되는 거니</li>
-          <li>에러가 뜨면 원인이라도 알 텐데</li>
-        </ol>
+  const { theme } = useTheme();
+  const [connectedUsers, setConnectedUsers] = useState(0);
+  const [nickname] = useState(generateRandomNickname());
+  const [newComment, setNewComment] = useState('');
 
-        <div className='flex gap-4 items-center flex-col sm:flex-row'>
-          <a
-            className='rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5'
-            href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image
-              className='dark:invert'
-              src='/vercel.svg'
-              alt='Vercel logomark'
-              width={20}
-              height={20}
-            />
-            다른 시도하러 가기
-          </a>
-          <a
-            className='rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44'
-            href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Read our docs
-          </a>
-        </div>
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const presenceChannel = supabase.channel('online-users', {
+      config: {
+        presence: { key: `user-${Math.random().toString(36).substring(2)}` },
+      },
+    });
+
+    // NOTE: Presence 상태 트래킹
+    presenceChannel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await presenceChannel.track({
+          online_at: new Date().toISOString(),
+        });
+      }
+    });
+
+    // NOTE: Presence sync 이벤트로 현재 접속자 수 가져옴
+    presenceChannel.on('presence', { event: 'sync' }, () => {
+      const currentUsers = presenceChannel.presenceState();
+      setConnectedUsers(Object.keys(currentUsers).length);
+    });
+
+    return () => {
+      presenceChannel.unsubscribe();
+    };
+  }, []);
+
+  const { data: comments, refetch } = useQuery<Comment[]>({
+    queryKey: ['comments'],
+    queryFn: fetchComments,
+  });
+
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const commentMutation = useMutation({
+    mutationFn: (newComment: string) => addComment(newComment, nickname),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ['comments'] });
+      setNewComment('');
+      await refetch();
+
+      // TODO: 최신 댓글로 스크롤 조정 기능 - 더 좋은 방법 강구해보기
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop =
+            scrollContainerRef.current.scrollHeight;
+        }
+      }, 100);
+    },
+    onError: (error) =>
+      console.error('채팅 작성 중 오류가 발생했습니다.', error.message),
+  });
+
+  const handleSubmitComment = () => {
+    if (newComment.trim() === '') return;
+    commentMutation.mutate(newComment);
+  };
+
+  return (
+    <div className='flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]'>
+      <main className='flex flex-col gap-6 items-center mx-6 min-w-[460px] max-w-[550px]'>
+        <section>
+          <Image
+            className='rounded-lg mb-6'
+            src='/images/APTAlbumCover.jpeg'
+            alt='APT. Album Cover'
+            width={280}
+            height={280}
+            priority
+          />
+          <div className='flex flex-col gap-4 items-center'>
+            <Link
+              className='font-[family-name:var(--font-geist-mono)] text-sm sm:text-base h-11 sm:h-12 px-5 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 py-3 text-white hover:from-indigo-600 hover:to-violet-400 shadow-lg hover:text-white shadow-neutral-300 dark:shadow-neutral-700 hover:shadow-2xl hover:shadow-neutral-400 hover:-tranneutral-y-px'
+              href='/game'
+              rel='noopener noreferrer'
+            >
+              <PlayIcon />
+              APT 게임 시작하기
+            </Link>
+            <div className='flex items-center gap-2'>
+              <EyeIcon />
+              <span
+                className={`${
+                  theme === 'light' ? 'text-zinc-800' : 'text-zinc-200'
+                } text-sm`}
+              >
+                현재 {connectedUsers}명이 접속해 있습니다.
+              </span>
+            </div>
+          </div>
+        </section>
+        <AnonymousChat
+          ref={scrollContainerRef}
+          scrollContainerRef={scrollContainerRef}
+          comments={comments ?? []}
+          newComment={newComment}
+          setNewComment={setNewComment}
+          handleSubmitComment={handleSubmitComment}
+        />
+        <Card className='py-3 w-full'>
+          <CardHeader className='px-5 flex-row'>
+            <VideoCameraIcon />
+            <h4 className='text-xl ml-2 text-default-600 font-[family-name:var(--font-geist-mono)]'>
+              ROSE & Bruno Mars 영상
+            </h4>
+          </CardHeader>
+          <CardBody className='px-5 text-sm text-default-600'>
+            <span>
+              Don't you want me like I want you, baby Don't you need me like I
+              need you now
+            </span>
+          </CardBody>
+        </Card>
       </main>
-      <footer className='row-start-3 flex gap-6 flex-wrap items-center justify-center'>
-        <a
-          className='flex items-center gap-2 hover:underline hover:underline-offset-4'
-          href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image
-            aria-hidden
-            src='/file.svg'
-            alt='File icon'
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className='flex items-center gap-2 hover:underline hover:underline-offset-4'
-          href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image
-            aria-hidden
-            src='/window.svg'
-            alt='Window icon'
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className='flex items-center gap-2 hover:underline hover:underline-offset-4'
-          href='https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image
-            aria-hidden
-            src='/globe.svg'
-            alt='Globe icon'
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-        <Button className='focus:outline-none'>Next UI Button</Button>
-      </footer>
     </div>
   );
 }
