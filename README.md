@@ -2,7 +2,7 @@
 
 ## 배포 주소
 
-https://apatue.vercel.app
+https://apateu.vercel.app
 
 ## 0. 프로젝트 소개
 
