@@ -44,8 +44,8 @@ const generateRandomNickname = () => {
 // NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
 // NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
 // NOTE: Tanstack Query 쿼리키, 타입 폴더 및 파일 생성 -> 따로 저장
-// TODO: 접속자 수, 채팅: 변경 즉시 바로바로 UI에 업데이트
 // TODO: 유튜브 영상 띄우기, 컴포넌트 분리
+// TODO: 접속자 수, 채팅: 변경 즉시 바로바로 UI에 업데이트
 
 export default function HomePage() {
   const { theme } = useTheme();
