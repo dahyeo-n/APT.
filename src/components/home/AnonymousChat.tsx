@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 
-import { AnonymousChatProps } from '@/types/types';
+import { AnonymousChatProps } from '@/types/chatTypes';
 
 import { formatTimeAgo } from '@/utils/formatTimeAgo';
 import { adjustTextareaScrolling } from '@/utils/adjustTextareaScrolling';

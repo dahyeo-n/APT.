@@ -10,7 +10,7 @@ import { addChat, fetchChats } from '../services/chats';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chatQueryKeys } from '@/queryKeys';
 
-import { Chat } from '@/types/types';
+import { Chat } from '@/types/chatTypes';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
@@ -43,7 +43,7 @@ const generateRandomNickname = () => {
 // NOTE: 현재 몇 명이 접속해있는지 추적하는 기능
 // NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
 // NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
-// NOTE: Tanstack Query 쿼리키 폴더 및 파일 생성 -> 따로 저장
+// NOTE: Tanstack Query 쿼리키, 타입 폴더 및 파일 생성 -> 따로 저장
 // TODO: 접속자 수, 채팅: 변경 즉시 바로바로 UI에 업데이트
 // TODO: 유튜브 영상 띄우기, 컴포넌트 분리
 

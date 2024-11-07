@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useEffect, useState, ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
-import '../styles/globals.css';
+import { ProviderProps } from '@/types/providerPropsType';
 
 import LoadingWrapper from '@/components/LoadingWrapper';
 
-interface ProviderProps {
-  children: ReactNode;
-}
+import '../styles/globals.css';
 
 const QueryProviders = ({ children }: ProviderProps) => {
   const [isMount, setMount] = useState(false);
