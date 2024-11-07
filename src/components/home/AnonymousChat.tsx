@@ -18,11 +18,9 @@ import {
 import { useTheme } from 'next-themes';
 
 export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
-  (
-    { chats, newChat, setNewChat, handleSubmitChat, scrollContainerRef },
-    ref
-  ) => {
+  ({ chats, newChat, setNewChat, handleSubmitChat }, ref) => {
     const { theme } = useTheme();
+    AnonymousChat.displayName = 'AnonymousChat';
 
     return (
       <Card className='py-2 w-full'>

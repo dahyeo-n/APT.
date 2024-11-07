@@ -99,8 +99,8 @@ const UserFeedbackButton = () => {
         onClick={handleToggleModal}
         className={`fixed z-50 bottom-20 right-10 w-10 h-10 rounded-full shadow-md flex items-center justify-center ${
           theme === 'light'
-            ? 'hover:bg-zinc-100'
-            : 'bg-zinc-900 hover:bg-pink-500'
+            ? 'hover:bg-zinc-200'
+            : 'bg-zinc-800 hover:bg-pink-500'
         } transition-colors duration-300`}
       >
         <BulbIcon theme={theme ?? 'light'} />
