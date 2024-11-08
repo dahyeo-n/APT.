@@ -1,5 +1,4 @@
-module.exports = {
-  generateBuildId: async () => {
-    return new Date().toISOString();
-  },
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
+
+module.exports = nextConfig;
