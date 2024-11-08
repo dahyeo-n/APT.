@@ -25,8 +25,8 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
     AnonymousChat.displayName = 'AnonymousChat';
 
     return (
-      <Card className='py-2 w-full'>
-        <CardHeader className='px-5 flex-row'>
+      <Card className='py-2 w-full !important'>
+        <CardHeader className='px-5 flex-row !important'>
           <ChatBubbleLeftRightIcon />
           <h4 className='text-xl ml-2 text-default-600 font-[family-name:var(--font-geist-mono)]'>
             익명 채팅
@@ -39,14 +39,14 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
           {(chats ?? []).map((chat) => (
             <CardBody
               key={chat.chat_id}
-              className='px-5 text-sm text-default-600'
+              className='px-5 text-sm text-default-600 !important'
             >
               <div className='flex items-start gap-4'>
                 <Avatar
                   isBordered
                   radius='full'
                   size='md'
-                  className='flex-shrink-0'
+                  className='flex-shrink-0 !important'
                 />
                 <div className='flex flex-col'>
                   <div className='flex items-center gap-2 mb-1'>
@@ -82,13 +82,13 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             </CardBody>
           ))}
         </div>
-        <CardFooter className='px-4'>
+        <CardFooter className='px-4 !important'>
           <div className='flex items-center gap-4 w-full'>
             <Avatar
               isBordered
               radius='full'
               size='md'
-              className='flex-shrink-0'
+              className='flex-shrink-0 !important'
             />
             <textarea
               value={newChat}
@@ -102,7 +102,7 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
               size='sm'
               onClick={handleSubmitChat}
               isDisabled={!newChat.trim()}
-              className='flex text-white justify-center items-center rounded-full h-9 p-2 bg-gradient-to-r from-sky-400 to-violet-500 hover:from-pink-400 hover:to-violet-500 cursor-pointer transition-color'
+              className='!important flex text-white justify-center items-center rounded-full h-9 p-2 bg-gradient-to-r from-sky-400 to-violet-500 hover:from-pink-400 hover:to-violet-500 cursor-pointer transition-color'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
