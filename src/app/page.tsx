@@ -14,8 +14,8 @@ import { Chat } from '@/types/chatTypes';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
-import { AnonymousChat } from '@/components/home/AnonymousChat';
 import { VideoCameraIcon } from '@/components/icons/homePageIcons/VideoCameraIcon';
+import { AnonymousChat } from '@/components/home/AnonymousChat';
 
 import { useTheme } from 'next-themes';
 import { Card, CardHeader, CardBody } from '@nextui-org/react';
