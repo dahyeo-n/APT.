@@ -10,7 +10,6 @@ const config: Config = {
   theme: {
     extend: {},
   },
-  // important: true,
   darkMode: 'class',
   plugins: [nextui()],
 };
