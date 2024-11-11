@@ -4,13 +4,15 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { supabase } from '../services/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import { addChat, fetchChats } from '../services/chats';
+import { fetchYouTubeVideos } from '@/services/fetchYouTubeVideos';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chatQueryKeys } from '@/queryKeys';
 
 import { Chat } from '@/types/chatTypes';
+import { YouTubeVideo } from '@/types/youTubeVideoTypes';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
@@ -44,7 +46,7 @@ const generateRandomNickname = () => {
 // NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
 // NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
 // NOTE: Tanstack Query 쿼리키, 타입 폴더 및 파일 생성 -> 따로 저장
-// TODO: 유튜브 영상 띄우기, 컴포넌트 분리
+// NOTE: 유튜브 영상 띄우기(제목, 채널 이름, 조회수, 업로드 날짜, 썸네일 이미지 / 조회수), 컴포넌트 분리
 // TODO: 접속자 수, 채팅: 변경 즉시 바로바로 UI에 업데이트
 
 export default function HomePage() {
@@ -113,9 +115,14 @@ export default function HomePage() {
     chatMutation.mutate(newChat);
   };
 
+  const { data: videos } = useQuery<YouTubeVideo[]>({
+    queryKey: ['youtubeVideos', 'apt'],
+    queryFn: fetchYouTubeVideos,
+  });
+
   return (
     <div className='flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]'>
-      <main className='flex flex-col gap-6 items-center mx-6 min-w-[460px] max-w-[550px]'>
+      <main className='flex flex-col gap-6 items-center mx-6'>
         <section>
           <Image
             className='rounded-lg mb-6'
@@ -158,14 +165,37 @@ export default function HomePage() {
           <CardHeader className='px-5 flex-row'>
             <VideoCameraIcon />
             <h4 className='text-xl ml-2 text-default-600 font-[family-name:var(--font-geist-mono)]'>
-              ROSE & Bruno Mars 영상
+              APT. 관련 인기 영상
             </h4>
           </CardHeader>
           <CardBody className='px-5 text-sm text-default-600'>
-            <span>
-              Don&apos;t you want me like I want you, baby Don&apos;t you need
-              me like I need you now
-            </span>
+            {videos?.map((video) => (
+              <div
+                key={video.id.videoId}
+                className='w-full max-w-[600px] mx-auto mb-6'
+              >
+                <div className='relative w-full h-0 pb-[56.25%] overflow-hidden'>
+                  <iframe
+                    className='absolute top-0 left-0 w-full h-full'
+                    src={`https://www.youtube.com/embed/${video.id.videoId}`}
+                    title={video.snippet.title}
+                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                    allowFullScreen
+                  />
+                </div>
+                <div className='p-4 flex flex-col justify-center'>
+                  <h5 className='text-md font-bold'>{video.snippet.title}</h5>
+                  <span className='text-sm text-zinc-600'>
+                    {video.snippet.channelTitle}
+                  </span>
+                  <span className='text-xs text-zinc-500'>
+                    {new Date(video.snippet.publishedAt).toLocaleDateString(
+                      'ko-KR'
+                    )}
+                  </span>
+                </div>
+              </div>
+            ))}
           </CardBody>
         </Card>
       </main>

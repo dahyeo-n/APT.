@@ -1,4 +1,4 @@
-import { supabase } from '../services/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import { Chat } from '@/types/chatTypes';
 
 export const fetchChats = async (): Promise<Chat[]> => {
