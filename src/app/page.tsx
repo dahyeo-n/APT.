@@ -15,9 +15,9 @@ import { Chat } from '@/types/chatTypes';
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
 import { AnonymousChat } from '@/components/home/AnonymousChat';
+import { PopularVideosRelatedToAPT } from '@/components/home/PopularVideosRelatedToAPT';
 
 import { useTheme } from 'next-themes';
-import { PopularVideosRelatedToAPT } from '@/components/home/PopularVideosRelatedToAPT';
 
 const generateRandomNickname = () => {
   const nicknames = [

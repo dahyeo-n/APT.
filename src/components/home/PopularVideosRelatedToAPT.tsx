@@ -1,12 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
 import { fetchYouTubeVideos } from '@/services/fetchYouTubeVideos';
+
+import { useQuery } from '@tanstack/react-query';
+import { youTubeVideoKeys } from '@/queryKeys';
 
 import { YouTubeVideo } from '@/types/youTubeVideoTypes';
 
 import { VideoCameraIcon } from '../icons/homePageIcons/VideoCameraIcon';
 
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
-import { youTubeVideoKeys } from '@/queryKeys';
 
 export const PopularVideosRelatedToAPT = () => {
   const { data: videos } = useQuery<YouTubeVideo[]>({
