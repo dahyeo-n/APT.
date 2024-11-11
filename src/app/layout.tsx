@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import QueryProviders from '@/app/providers';
 
+import { MetadataProps } from '@/types/layoutPropsTypes';
+
+import { getMetadata } from '@/lib/getMetadata';
+
 const GmarketSansTTFLight = localFont({
   src: './fonts/GmarketSansTTFLight.ttf',
   variable: '--font-geist-sans',
@@ -18,14 +22,12 @@ const GmarketSansTTFBold = localFont({
   weight: '100 900',
 });
 
-export const metadata: Metadata = {
-  title: 'APT.',
-  description:
-    '🇰🇷 한국의 술게임인 아파트 게임을 하고, 게임 결과를 공유할 수 있는 서비스',
-  icons: {
-    icon: '/images/APTFavicon.png',
-  },
-};
+export async function generateMetadata(
+  props: MetadataProps
+): Promise<Metadata> {
+  const { params } = props;
+  return getMetadata(params);
+}
 
 export default function RootLayout({
   children,
@@ -34,7 +36,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ko'>
-      <head></head>
+      <head>
+        <meta
+          name='google-site-verification'
+          content='4GpnpC50_46JD5NKq3x1cr4nS8p6JY60cr7a3xBbQvc'
+        />
+        <meta
+          name='naver-site-verification'
+          content='14299dd46c22b70e509a255225c402bfdb54b202'
+        />
+      </head>
       <body
         className={`${GmarketSansTTFLight.variable} ${GmarketSansTTFMedium.variable} ${GmarketSansTTFBold.variable} antialiased`}
       >

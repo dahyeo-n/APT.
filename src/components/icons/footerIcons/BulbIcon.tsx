@@ -1,4 +1,3 @@
-// BulbIcon 컴포넌트
 export const BulbIcon = ({ theme }: { theme: string }) => {
   return (
     <svg

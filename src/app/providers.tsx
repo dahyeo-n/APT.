@@ -7,7 +7,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
-import { ProviderProps } from '@/types/providerPropsType';
+import { ProviderProps } from '@/types/layoutPropsTypes';
 
 import LoadingWrapper from '@/components/LoadingWrapper';
 
