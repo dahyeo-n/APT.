@@ -3,7 +3,7 @@ export async function fetchYouTubeVideos() {
 
   try {
     const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=apt&key=${API_KEY}&maxResults=10&type=video`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=apt&key=${API_KEY}&maxResults=6&type=video`
     );
 
     if (!response.ok) {

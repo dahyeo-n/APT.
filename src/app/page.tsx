@@ -6,21 +6,18 @@ import Link from 'next/link';
 
 import { supabase } from '../lib/supabaseClient';
 import { addChat, fetchChats } from '../services/chats';
-import { fetchYouTubeVideos } from '@/services/fetchYouTubeVideos';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chatQueryKeys } from '@/queryKeys';
 
 import { Chat } from '@/types/chatTypes';
-import { YouTubeVideo } from '@/types/youTubeVideoTypes';
 
 import { PlayIcon } from '@/components/icons/homePageIcons/PlayIcon';
 import { EyeIcon } from '@/components/icons/homePageIcons/EyeIcon';
-import { VideoCameraIcon } from '@/components/icons/homePageIcons/VideoCameraIcon';
 import { AnonymousChat } from '@/components/home/AnonymousChat';
 
 import { useTheme } from 'next-themes';
-import { Card, CardHeader, CardBody } from '@nextui-org/react';
+import { PopularVideosRelatedToAPT } from '@/components/home/PopularVideosRelatedToAPT';
 
 const generateRandomNickname = () => {
   const nicknames = [
@@ -115,14 +112,9 @@ export default function HomePage() {
     chatMutation.mutate(newChat);
   };
 
-  const { data: videos } = useQuery<YouTubeVideo[]>({
-    queryKey: ['youtubeVideos', 'apt'],
-    queryFn: fetchYouTubeVideos,
-  });
-
   return (
     <div className='flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]'>
-      <main className='flex flex-col gap-6 items-center mx-6'>
+      <main className='flex flex-col gap-6 items-center w-full max-w-lg px-2'>
         <section>
           <Image
             className='rounded-lg mb-6'
@@ -161,43 +153,7 @@ export default function HomePage() {
           setNewChat={setNewChat}
           handleSubmitChat={handleSubmitChat}
         />
-        <Card className='py-3 w-full'>
-          <CardHeader className='px-5 flex-row'>
-            <VideoCameraIcon />
-            <h4 className='text-xl ml-2 text-default-600 font-[family-name:var(--font-geist-mono)]'>
-              APT. 관련 인기 영상
-            </h4>
-          </CardHeader>
-          <CardBody className='px-5 text-sm text-default-600'>
-            {videos?.map((video) => (
-              <div
-                key={video.id.videoId}
-                className='w-full max-w-[600px] mx-auto mb-6'
-              >
-                <div className='relative w-full h-0 pb-[56.25%] overflow-hidden'>
-                  <iframe
-                    className='absolute top-0 left-0 w-full h-full'
-                    src={`https://www.youtube.com/embed/${video.id.videoId}`}
-                    title={video.snippet.title}
-                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                    allowFullScreen
-                  />
-                </div>
-                <div className='p-4 flex flex-col justify-center'>
-                  <h5 className='text-md font-bold'>{video.snippet.title}</h5>
-                  <span className='text-sm text-zinc-600'>
-                    {video.snippet.channelTitle}
-                  </span>
-                  <span className='text-xs text-zinc-500'>
-                    {new Date(video.snippet.publishedAt).toLocaleDateString(
-                      'ko-KR'
-                    )}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </CardBody>
-        </Card>
+        <PopularVideosRelatedToAPT />
       </main>
     </div>
   );
