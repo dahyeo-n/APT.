@@ -2,17 +2,17 @@
 
 import Link from 'next/link';
 
-import { MultiPlayerIcon } from '@/components/icons/\bgamePlayPageIcons/MultiPlayerIcon';
-import { SinglePlayerIcon } from '@/components/icons/\bgamePlayPageIcons/SinglePlayerIcon';
-import { UserMinusIcon } from '@/components/icons/\bgamePlayPageIcons/UserMinusIcon';
-import { UserPlusIcon } from '@/components/icons/\bgamePlayPageIcons/UserPlusIcon';
-import { MinusIcon } from '@/components/icons/\bgamePlayPageIcons/MinusIcon';
-import { PlusIcon } from '@/components/icons/\bgamePlayPageIcons/PlusIcon';
+import { MultiPlayerIcon } from '@/components/icons/gamePlayPageIcons/MultiPlayerIcon';
+import { SinglePlayerIcon } from '@/components/icons/gamePlayPageIcons/SinglePlayerIcon';
+import { UserMinusIcon } from '@/components/icons/gamePlayPageIcons/UserMinusIcon';
+import { UserPlusIcon } from '@/components/icons/gamePlayPageIcons/UserPlusIcon';
+import { MinusIcon } from '@/components/icons/gamePlayPageIcons/MinusIcon';
+import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
 
 import { Card } from '@nextui-org/react';
 
 // TODO: 최대 몇 명까지 플레이 가능하게 할지
-// TODO: 'singleMode', 'multiMode' 다르게 화면 표시
+// TODO: 'single_mode', 'multi_mode' 다르게 화면 표시
 
 const GamePlayPage = () => {
   return (
@@ -24,7 +24,10 @@ const GamePlayPage = () => {
       >
         튜토리얼 보기
       </Link>
-      <div className='flex mb-4 w-full max-w-lg rounded-lg bg-zinc-800 text-white'>
+      <div
+        id='game_mode'
+        className='flex mb-4 w-full max-w-lg rounded-lg bg-zinc-800 text-white'
+      >
         <button className='flex justify-center gap-2 flex-1 py-3 rounded-l-lg bg-indigo-500 transition-all duration-300 hover:bg-indigo-600'>
           <MultiPlayerIcon />
           여러 명
@@ -41,6 +44,7 @@ const GamePlayPage = () => {
               1
             </div>
             <input
+              id='participants_names'
               className='text-zinc-800  bg-transparent rounded-lg'
               placeholder='이름을 입력해주세요.'
             />
@@ -54,7 +58,10 @@ const GamePlayPage = () => {
           추가
         </button>
       </div>
-      <div className='flex gap-3 mb-4 px-4 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600'>
+      <div
+        id='number_of_aparteu_floors'
+        className='flex gap-3 mb-4 px-4 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600'
+      >
         <button>
           <MinusIcon />
         </button>
