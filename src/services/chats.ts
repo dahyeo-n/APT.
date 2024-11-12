@@ -3,7 +3,7 @@ import { Chat } from '@/types/chatTypes';
 
 export const fetchChats = async (): Promise<Chat[]> => {
   const { data, error } = await supabase
-    .from('Chats')
+    .from('anonymous_chats')
     .select('*')
     .order('created_at', { ascending: true });
 
@@ -16,7 +16,7 @@ export const addChat = async (
   nickname: string
 ): Promise<Chat[] | null> => {
   const { data, error } = await supabase
-    .from('Chats')
+    .from('anonymous_chats')
     .insert([
       {
         nickname,
