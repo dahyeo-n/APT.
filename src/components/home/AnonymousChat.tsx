@@ -35,7 +35,7 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             {chats ? chats.length : 0}개
           </span>
         </CardHeader>
-        <div className='max-h-[350px] overflow-y-auto' ref={ref}>
+        <div className='overflow-y-auto' ref={ref}>
           {(chats ?? []).map((chat) => (
             <CardBody
               key={chat.chat_id}
