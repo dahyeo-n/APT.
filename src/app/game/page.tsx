@@ -16,7 +16,6 @@ import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
 import { useTheme } from 'next-themes';
 import { Button, Card } from '@nextui-org/react';
 
-// TODO: 이름 입력 안 했을 경우, 입력해달라는 문구 나오게
 // TODO: 어제 커밋한 스타일링, 기능 PR 올리기
 // TODO: 저장된 데이터를 토대로 3D 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
@@ -34,8 +33,8 @@ const GamePlayPage = () => {
   const insertApateuGameData = async () => {
     const { error } = await supabase.from('apateu_games').insert({
       game_mode: gameMode,
-      participants_names: participants.filter((name) => name !== ''),
-      number_of_participants: participants.filter((name) => name !== '').length,
+      participants_names: participants,
+      number_of_participants: participants.length,
       number_of_aparteu_floors: numberOfFloors,
     });
 
@@ -47,10 +46,7 @@ const GamePlayPage = () => {
   });
 
   const handleAddParticipant = () => {
-    if (
-      participants.length < MAX_PARTICIPANTS &&
-      participants.every((name) => name !== '')
-    ) {
+    if (participants.length < MAX_PARTICIPANTS) {
       setParticipants([...participants, '']);
     }
   };
@@ -137,7 +133,7 @@ const GamePlayPage = () => {
                 `}
               >
                 <div
-                  className={`flex items-center justify-center w-7 h-7 text-zinc-400 rounded-full
+                  className={`flex items-center justify-center w-6 h-6 text-sm sm:w-7 sm:h-7 text-zinc-400 rounded-full
                   ${theme === 'light' ? 'bg-zinc-200' : ' bg-zinc-700'}
                   `}
                 >
@@ -180,12 +176,12 @@ const GamePlayPage = () => {
             추가
           </Button>
           <span className='w-full text-center text-sm text-zinc-400'>
-            최대 8명까지 플레이할 수 있습니다.
+            최대 8명까지 플레이할 수 있어요.
           </span>
         </Card>
       ) : (
-        <span className='w-full text-center text-zinc-400 p-3'>
-          싱글 플레이는 컴퓨터와 대결하게 됩니다.
+        <span className='w-full text-center text-zinc-400 p-2'>
+          싱글 플레이는 컴퓨터와 대결하게 돼요.
         </span>
       )}
 
@@ -223,7 +219,11 @@ const GamePlayPage = () => {
       <Button
         className='w-full py-2 bg-pink-400 text-white rounded-lg sm:py-3 lg:max-w-lg hover:bg-pink-500 shadow-lg'
         onClick={handleStartGame}
-        isDisabled={numberOfFloors < 1}
+        isDisabled={
+          numberOfFloors < 1 ||
+          (gameMode === 'multi_mode' &&
+            participants.some((name) => name === ''))
+        }
       >
         시작하기
       </Button>
