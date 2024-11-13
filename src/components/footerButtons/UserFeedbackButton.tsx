@@ -77,11 +77,11 @@ const UserFeedbackButton = () => {
       const nowKST = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
 
       const { error } = await supabase
-        .from('User_Requests')
+        .from('user_requests')
         .insert([{ type: feedbackType, email, content, created_at: nowKST }]);
 
       if (error) {
-        console.error('피드백 제출 중 오류 발생:', error.message);
+        console.error('피드백 제출 중 오류 발생: ', error.message);
       } else {
         alert('제출 완료!');
         setEmail('');

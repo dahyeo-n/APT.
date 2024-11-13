@@ -39,12 +39,7 @@ const generateRandomNickname = () => {
   return nicknames[Math.floor(Math.random() * nicknames.length)];
 };
 
-// NOTE: 현재 몇 명이 접속해있는지 추적하는 기능
-// NOTE: DB 연동 / 닉네임: 랜덤 자동 생성, 시맨틱 태그
-// NOTE: comment -> chat으로 변수명, 파일명 모두 변경 => 커밋
-// NOTE: Tanstack Query 쿼리키, 타입 폴더 및 파일 생성 -> 따로 저장
-// NOTE: 유튜브 영상 띄우기(제목, 채널 이름, 조회수, 업로드 날짜, 썸네일 이미지 / 조회수), 컴포넌트 분리
-// TODO: 접속자 수, 채팅: 변경 즉시 바로바로 UI에 업데이트
+// TODO: 접속자 수 전역으로 책정해서 합산되게, 채팅: 변경 즉시 바로바로 UI에 업데이트
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -104,7 +99,7 @@ export default function HomePage() {
       }, 100);
     },
     onError: (error) =>
-      console.error('채팅 작성 중 오류가 발생했습니다.', error.message),
+      console.error('채팅 작성 중 오류 발생: ', error.message),
   });
 
   const handleSubmitChat = () => {
