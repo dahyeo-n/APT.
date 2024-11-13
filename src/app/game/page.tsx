@@ -13,11 +13,12 @@ import { UserPlusIcon } from '@/components/icons/gamePlayPageIcons/UserPlusIcon'
 import { MinusIcon } from '@/components/icons/gamePlayPageIcons/MinusIcon';
 import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
 
-import { Card } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
+import { Button, Card } from '@nextui-org/react';
 
+// TODO: 어제 커밋한 스타일링, 기능 PR 올리기
 // TODO: 최대 몇 명까지 플레이 가능하게 할지
-// TODO: 'single_mode', 'multi_mode' 다르게 화면 표시
+// TODO: 저장된 데이터를 토대로 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
 const GamePlayPage = () => {
   const [gameMode, setGameMode] = useState<'single_mode' | 'multi_mode'>(
@@ -64,25 +65,23 @@ const GamePlayPage = () => {
   const handleStartGame = () => {
     if (gameMode) {
       mutation.mutate();
-    } else {
-      alert('게임 모드를 선택해주세요.');
     }
   };
 
   return (
-    <div className='flex flex-col justify-center items-center px-4 w-full max-w-md mx-auto font-[family-name:var(--font-geist-sans)]'>
-      <Card className='w-full h-64 mb-6 flex items-center justify-center'>
+    <div className='flex flex-col justify-center items-center gap-4 px-4 w-full max-w-md mx-auto font-[family-name:var(--font-geist-sans)]'>
+      <Card className='w-full h-64 flex items-center justify-center'>
         애니메이션
       </Card>
       <Link
         href='/game/tutorial'
-        className='w-full py-2 bg-indigo-400 text-white text-center rounded-lg mb-4 sm:py-3 lg:max-w-lg hover:bg-indigo-500'
+        className='w-full py-2 bg-indigo-400 text-white text-center rounded-lg sm:py-3 lg:max-w-lg hover:bg-indigo-500'
       >
         튜토리얼 보기
       </Link>
       <div
         id='game_mode'
-        className='flex mb-4 w-full max-w-lg rounded-lg bg-zinc-800 text-white'
+        className='flex w-full max-w-lg rounded-lg bg-zinc-800 text-white'
       >
         <button
           className={`flex justify-center gap-2 flex-1 py-3 rounded-l-lg transition-all duration-300 ${
@@ -111,59 +110,67 @@ const GamePlayPage = () => {
           혼자
         </button>
       </div>
-      <Card className='w-full p-6 mb-4 text-center rounded-xl shadow-md max-w-lg'>
-        <ul className='space-y-4'>
-          {participants.map((name, index) => (
-            <li
-              key={index}
-              className={`flex items-center justify-between px-4 py-2 rounded-lg
+
+      {gameMode === 'multi_mode' ? (
+        <Card className='w-full p-6 text-center rounded-xl shadow-md max-w-lg'>
+          <ul className='space-y-4'>
+            {participants.map((name, index) => (
+              <li
+                key={index}
+                className={`flex items-center justify-between px-4 py-2 rounded-lg
                 ${theme === 'light' ? 'bg-zinc-100' : 'bg-zinc-800'}
                 `}
-            >
-              <div
-                className={`flex items-center justify-center w-7 h-7 text-zinc-400 rounded-full
+              >
+                <div
+                  className={`flex items-center justify-center w-7 h-7 text-zinc-400 rounded-full
                   ${theme === 'light' ? 'bg-zinc-200' : ' bg-zinc-700'}
                   `}
-              >
-                {index + 1}
-              </div>
-              <input
-                id='participants_names'
-                className={`bg-transparent ${
-                  theme === 'light' ? 'text-zinc-800' : 'text-zinc-200'
-                }`}
-                placeholder='이름을 입력해주세요.'
-                value={name}
-                onChange={(e) =>
-                  handleChangeParticipantName(index, e.target.value)
-                }
-              />
-              <button
-                className={`p-2 rounded transition-all duration-300
+                >
+                  {index + 1}
+                </div>
+                <input
+                  id='participants_names'
+                  className={`bg-transparent ${
+                    theme === 'light' ? 'text-zinc-800' : 'text-zinc-200'
+                  }`}
+                  placeholder='이름을 입력해주세요.'
+                  value={name}
+                  onChange={(e) =>
+                    handleChangeParticipantName(index, e.target.value)
+                  }
+                />
+                <button
+                  className={`p-2 rounded transition-all duration-300
                   ${
                     theme === 'light'
                       ? 'bg-zinc-300 hover:bg-zinc-500'
                       : 'bg-zinc-700 hover:bg-zinc-900'
                   }`}
-                onClick={() => handleRemoveParticipant(index)}
-                disabled={participants.length <= 1}
-              >
-                <UserMinusIcon />
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button
-          className='flex justify-center gap-2 w-full py-2 mt-4 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
-          onClick={handleAddParticipant}
-        >
-          <UserPlusIcon />
-          추가
-        </button>
-      </Card>
+                  onClick={() => handleRemoveParticipant(index)}
+                  disabled={participants.length <= 1}
+                >
+                  <UserMinusIcon />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <Button
+            className='flex justify-center gap-2 w-full py-2 mt-4 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
+            onClick={handleAddParticipant}
+          >
+            <UserPlusIcon />
+            추가
+          </Button>
+        </Card>
+      ) : (
+        <span className='w-full text-center text-zinc-400 p-3 rounded-lg'>
+          싱글 플레이는 컴퓨터와 대결하게 됩니다.
+        </span>
+      )}
+
       <div
         id='number_of_aparteu_floors'
-        className='flex gap-3 mb-4 px-4 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
+        className='flex gap-3 px-4 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
       >
         <button
           onClick={() => setNumberOfFloors((prev) => Math.max(prev - 1, 1))}
