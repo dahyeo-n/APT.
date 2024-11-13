@@ -17,7 +17,6 @@ import { useTheme } from 'next-themes';
 import { Button, Card } from '@nextui-org/react';
 
 // TODO: 어제 커밋한 스타일링, 기능 PR 올리기
-// TODO: 최대 몇 명까지 플레이 가능하게 할지
 // TODO: 저장된 데이터를 토대로 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
 const GamePlayPage = () => {
@@ -116,8 +115,8 @@ const GamePlayPage = () => {
       </div>
 
       {gameMode === 'multi_mode' ? (
-        <Card className='w-full p-6 text-center rounded-xl shadow-md max-w-lg'>
-          <ul className='space-y-4'>
+        <Card className='w-full p-5 gap-4 text-center rounded-xl shadow-md max-w-lg'>
+          <ul className='space-y-3'>
             {participants.map((name, index) => (
               <li
                 key={index}
@@ -159,16 +158,19 @@ const GamePlayPage = () => {
             ))}
           </ul>
           <Button
-            className='flex justify-center gap-2 w-full py-2 mt-4 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
+            className='flex justify-center w-full py-2 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
             onClick={handleAddParticipant}
             isDisabled={participants.length >= MAX_PARTICIPANTS}
           >
             <UserPlusIcon />
             추가
           </Button>
+          <span className='w-full text-center text-sm text-zinc-400'>
+            최대 8명까지 플레이할 수 있습니다.
+          </span>
         </Card>
       ) : (
-        <span className='w-full text-center text-zinc-400 p-3 rounded-lg'>
+        <span className='w-full text-center text-zinc-400 p-3'>
           싱글 플레이는 컴퓨터와 대결하게 됩니다.
         </span>
       )}
