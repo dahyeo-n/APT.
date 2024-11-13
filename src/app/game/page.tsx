@@ -16,16 +16,15 @@ import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
 import { useTheme } from 'next-themes';
 import { Button, Card } from '@nextui-org/react';
 
-// TODO: 멀티 플레이의 경우, 최소 2명의 이름 작성란이 나오도록 지정 -> 유저 마이너스 버튼 안 보이게
 // TODO: 이름 입력 안 했을 경우, 입력해달라는 문구 나오게
 // TODO: 어제 커밋한 스타일링, 기능 PR 올리기
-// TODO: 저장된 데이터를 토대로 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
+// TODO: 저장된 데이터를 토대로 3D 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
 const GamePlayPage = () => {
   const [gameMode, setGameMode] = useState<'single_mode' | 'multi_mode'>(
     'multi_mode'
   );
-  const [participants, setParticipants] = useState<string[]>(['']);
+  const [participants, setParticipants] = useState<string[]>(['', '']);
   const [numberOfFloors, setNumberOfFloors] = useState<number>(1);
   const [floorError, setFloorError] = useState(false);
 
@@ -156,14 +155,16 @@ const GamePlayPage = () => {
                   }
                 />
                 <button
-                  className={`p-2 rounded transition-all duration-300
-                  ${
-                    theme === 'light'
-                      ? 'bg-zinc-300 hover:bg-zinc-500'
-                      : 'bg-zinc-700 hover:bg-zinc-900'
+                  className={`p-2 rounded transition-all duration-300 ${
+                    participants.length > 2
+                      ? theme === 'light'
+                        ? 'bg-zinc-300 hover:bg-zinc-500'
+                        : 'bg-zinc-700 hover:bg-zinc-900'
+                      : 'opacity-0 cursor-default'
                   }`}
-                  onClick={() => handleRemoveParticipant(index)}
-                  disabled={participants.length <= 1}
+                  onClick={() =>
+                    participants.length > 2 && handleRemoveParticipant(index)
+                  }
                 >
                   <UserMinusIcon />
                 </button>
