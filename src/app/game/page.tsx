@@ -133,8 +133,12 @@ const GamePlayPage = () => {
                 `}
               >
                 <div
-                  className={`flex items-center justify-center w-6 h-6 text-sm sm:w-7 sm:h-7 text-zinc-400 rounded-full
-                  ${theme === 'light' ? 'bg-zinc-200' : ' bg-zinc-700'}
+                  className={`flex items-center justify-center w-6 h-6 text-sm sm:w-7 sm:h-7 rounded-full
+                  ${
+                    theme === 'light'
+                      ? 'bg-zinc-200 text-zinc-500'
+                      : ' bg-zinc-700 text-zinc-400'
+                  }
                   `}
                 >
                   {index + 1}
@@ -175,12 +179,20 @@ const GamePlayPage = () => {
             <UserPlusIcon />
             추가
           </Button>
-          <span className='w-full text-center text-sm text-zinc-400'>
+          <span
+            className={`w-full text-center text-sm ${
+              theme === 'light' ? 'text-zinc-600' : 'text-zinc-400'
+            }`}
+          >
             최대 8명까지 플레이할 수 있어요.
           </span>
         </Card>
       ) : (
-        <span className='w-full text-center text-zinc-400 p-2'>
+        <span
+          className={`w-full text-center p-1 ${
+            theme === 'light' ? 'text-zinc-600' : 'text-zinc-400'
+          }`}
+        >
           싱글 플레이는 컴퓨터와 대결하게 돼요.
         </span>
       )}
