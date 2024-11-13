@@ -16,6 +16,8 @@ import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
 import { useTheme } from 'next-themes';
 import { Button, Card } from '@nextui-org/react';
 
+// TODO: 멀티 플레이의 경우, 최소 2명의 이름 작성란이 나오도록 지정 -> 유저 마이너스 버튼 안 보이게
+// TODO: 이름 입력 안 했을 경우, 입력해달라는 문구 나오게
 // TODO: 어제 커밋한 스타일링, 기능 PR 올리기
 // TODO: 저장된 데이터를 토대로 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
@@ -24,7 +26,8 @@ const GamePlayPage = () => {
     'multi_mode'
   );
   const [participants, setParticipants] = useState<string[]>(['']);
-  const [numberOfFloors, setNumberOfFloors] = useState<number>(8);
+  const [numberOfFloors, setNumberOfFloors] = useState<number>(1);
+  const [floorError, setFloorError] = useState(false);
 
   const { theme } = useTheme();
   const MAX_PARTICIPANTS = 8;
@@ -65,8 +68,18 @@ const GamePlayPage = () => {
     setParticipants(newParticipants);
   };
 
+  const handleFloorInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = Number(event.target.value);
+    if (value >= 0 && value <= 50) {
+      setNumberOfFloors(value);
+      setFloorError(value < 1);
+    }
+  };
+
   const handleStartGame = () => {
-    if (gameMode) {
+    if (gameMode && numberOfFloors >= 1) {
       mutation.mutate();
     }
   };
@@ -175,26 +188,44 @@ const GamePlayPage = () => {
         </span>
       )}
 
+      {numberOfFloors < 1 && floorError && (
+        <span className='text-pink-500 text-sm'>
+          1 이상 50 이하의 층수를 입력해주세요.
+        </span>
+      )}
       <div
         id='number_of_aparteu_floors'
-        className='flex gap-3 px-4 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
+        className='flex gap-3 px-3 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
       >
         <button
           onClick={() => setNumberOfFloors((prev) => Math.max(prev - 1, 1))}
+          disabled={numberOfFloors < 1}
         >
           <MinusIcon />
         </button>
-        {numberOfFloors}층
-        <button onClick={() => setNumberOfFloors((prev) => prev + 1)}>
+        <input
+          value={numberOfFloors}
+          onChange={handleFloorInputChange}
+          min={1}
+          max={50}
+          className='w-6 text-center bg-transparent text-white border-b border-zinc-300 focus:outline-none'
+        />
+        층
+        <button
+          onClick={() => setNumberOfFloors((prev) => prev + 1)}
+          disabled={numberOfFloors >= 50}
+        >
           <PlusIcon />
         </button>
       </div>
-      <button
+
+      <Button
         className='w-full py-2 bg-pink-400 text-white rounded-lg sm:py-3 lg:max-w-lg hover:bg-pink-500 shadow-lg'
         onClick={handleStartGame}
+        isDisabled={numberOfFloors < 1}
       >
         시작하기
-      </button>
+      </Button>
     </div>
   );
 };
