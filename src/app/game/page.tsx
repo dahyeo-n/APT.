@@ -28,6 +28,7 @@ const GamePlayPage = () => {
   const [numberOfFloors, setNumberOfFloors] = useState<number>(8);
 
   const { theme } = useTheme();
+  const MAX_PARTICIPANTS = 8;
 
   const insertApateuGameData = async () => {
     const { error } = await supabase.from('apateu_games').insert({
@@ -45,7 +46,10 @@ const GamePlayPage = () => {
   });
 
   const handleAddParticipant = () => {
-    if (participants.every((name) => name !== '')) {
+    if (
+      participants.length < MAX_PARTICIPANTS &&
+      participants.every((name) => name !== '')
+    ) {
       setParticipants([...participants, '']);
     }
   };
@@ -89,7 +93,7 @@ const GamePlayPage = () => {
               ? 'bg-indigo-500 hover:bg-indigo-500'
               : ` ${
                   theme === 'light' ? 'bg-zinc-300' : 'bg-transparent'
-                } hover:bg-indigo-500`
+                } hover:bg-indigo-600`
           }`}
           onClick={() => setGameMode('multi_mode')}
         >
@@ -102,7 +106,7 @@ const GamePlayPage = () => {
               ? 'bg-indigo-500 hover:bg-indigo-500'
               : ` ${
                   theme === 'light' ? 'bg-zinc-300' : 'bg-transparent'
-                } hover:bg-indigo-500`
+                } hover:bg-indigo-600`
           }`}
           onClick={() => setGameMode('single_mode')}
         >
@@ -157,6 +161,7 @@ const GamePlayPage = () => {
           <Button
             className='flex justify-center gap-2 w-full py-2 mt-4 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
             onClick={handleAddParticipant}
+            isDisabled={participants.length >= MAX_PARTICIPANTS}
           >
             <UserPlusIcon />
             추가
