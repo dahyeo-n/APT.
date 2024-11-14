@@ -9,6 +9,7 @@ import { adjustTextareaScrolling } from '@/utils/adjustTextareaScrolling';
 
 import { ChatBubbleLeftRightIcon } from '@/components/icons/homePageIcons/ChatBubbleLeftRightIcon';
 
+import { useTheme } from 'next-themes';
 import {
   Avatar,
   Button,
@@ -17,12 +18,11 @@ import {
   CardBody,
   CardFooter,
 } from '@nextui-org/react';
-import { useTheme } from 'next-themes';
 
 export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
   ({ chats, newChat, setNewChat, handleSubmitChat }, ref) => {
-    const { theme } = useTheme();
     AnonymousChat.displayName = 'AnonymousChat';
+    const { theme } = useTheme();
 
     return (
       <Card className='py-2 w-full'>

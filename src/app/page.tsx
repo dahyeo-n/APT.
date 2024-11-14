@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { supabase } from '../lib/supabaseClient';
-import { addChat, fetchChats } from '../services/chats';
+import { fetchChats } from '../services/chats/fetchChats';
+import { addChat } from '@/services/chats/addChat';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { chatQueryKeys } from '@/queryKeys';
+
+import { chatQueryKeys } from '@/constants/queryKeys';
 
 import { Chat } from '@/types/chatTypes';
 
@@ -18,6 +19,7 @@ import { AnonymousChat } from '@/components/home/AnonymousChat';
 import { PopularVideosRelatedToAPT } from '@/components/home/PopularVideosRelatedToAPT';
 
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
 
 const generateRandomNickname = () => {
   const nicknames = [
@@ -43,11 +45,11 @@ const generateRandomNickname = () => {
 
 export default function HomePage() {
   const { theme } = useTheme();
+  const queryClient = useQueryClient();
+
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [nickname] = useState(generateRandomNickname());
   const [newChat, setNewChat] = useState('');
-
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     const presenceChannel = supabase.channel('online-users', {

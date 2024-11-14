@@ -1,7 +1,7 @@
 import { fetchYouTubeVideos } from '@/services/fetchYouTubeVideos';
 
 import { useQuery } from '@tanstack/react-query';
-import { youTubeVideoKeys } from '@/queryKeys';
+import { youTubeVideoKeys } from '@/constants/queryKeys';
 
 import { YouTubeVideo } from '@/types/youTubeVideoTypes';
 

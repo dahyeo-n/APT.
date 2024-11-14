@@ -1,7 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import { supabase } from '../../lib/supabaseClient';
+
+import { adjustTextareaScrolling } from '@/utils/adjustTextareaScrolling';
+
+import { SUPABASE_TABLES } from '@/constants/supabaseTables';
+
+import { BulbIcon } from '../icons/footerIcons/BulbIcon';
+import { SpeechBubbleIcon } from '../icons/footerIcons/SpeechBubbleIcon';
+import { ErrorIcon } from '../icons/footerIcons/ErrorIcon';
+import { RequestIcon } from '../icons/footerIcons/RequestIcon';
+import { CheckIcon } from '../icons/footerIcons/CheckIcon';
+import { PaperAirplaneIcon } from '../icons/footerIcons/PaperAirplaneIcon';
 
 import { useTheme } from 'next-themes';
 import {
@@ -16,22 +28,15 @@ import {
   Input,
 } from '@nextui-org/react';
 
-import { BulbIcon } from '../icons/footerIcons/BulbIcon';
-import { SpeechBubbleIcon } from '../icons/footerIcons/SpeechBubbleIcon';
-import { ErrorIcon } from '../icons/footerIcons/ErrorIcon';
-import { RequestIcon } from '../icons/footerIcons/RequestIcon';
-import { CheckIcon } from '../icons/footerIcons/CheckIcon';
-import { PaperAirplaneIcon } from '../icons/footerIcons/PaperAirplaneIcon';
-import { adjustTextareaScrolling } from '@/utils/adjustTextareaScrolling';
-
 const UserFeedbackButton = () => {
-  const { theme } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState('에러');
   const [email, setEmail] = useState('');
   const [content, setContent] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [emailCheckColor, setEmailCheckColor] = useState('');
+
+  const { theme } = useTheme();
 
   const handleToggleModal = () => setIsModalOpen(!isModalOpen);
   const handleFeedbackTypeChange = (type: string) => setFeedbackType(type);
@@ -77,7 +82,7 @@ const UserFeedbackButton = () => {
       const nowKST = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
 
       const { error } = await supabase
-        .from('user_requests')
+        .from(SUPABASE_TABLES.USER_REQUESTS)
         .insert([{ type: feedbackType, email, content, created_at: nowKST }]);
 
       if (error) {
@@ -151,7 +156,7 @@ const UserFeedbackButton = () => {
                     }
                   />
                 </Tabs>
-                <div id='emailInput' className='mb-2'>
+                <div className='mb-2'>
                   <Input
                     isRequired
                     className='mb-2'
@@ -162,17 +167,14 @@ const UserFeedbackButton = () => {
                     placeholder='이메일을 입력해주세요.'
                     onChange={handleEmailChange}
                   />
-                  <div
-                    id='emailCheck'
-                    className={`flex items-center gap-1 ${emailCheckColor}`}
-                  >
+                  <div className={`flex items-center gap-1 ${emailCheckColor}`}>
                     <CheckIcon />
                     <span className='text-xs'>
                       이메일 형식에 맞춰주세요 (example@gmail.com)
                     </span>
                   </div>
                 </div>
-                <div id='contentTextarea'>
+                <div>
                   <div
                     className='group flex flex-col is-filled'
                     data-filled-within='true'
