@@ -14,7 +14,6 @@ import StartGameButton from '@/components/gamePlay/StartGameButton';
 import { useTheme } from 'next-themes';
 import { Card } from '@nextui-org/react';
 
-// TODO: Supabase 테이블명 => 쿼리키처럼 따로 관리 (오타 방지 차원)
 // TODO: 저장된 데이터를 토대로 3D 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
 const GamePlayPage = () => {

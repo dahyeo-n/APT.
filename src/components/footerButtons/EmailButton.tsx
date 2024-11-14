@@ -1,7 +1,8 @@
 'use client';
 
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
+
+import { useTheme } from 'next-themes';
 
 const EmailButton = () => {
   const { theme } = useTheme();

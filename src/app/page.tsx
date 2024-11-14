@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 import { supabase } from '../lib/supabaseClient';
 import { fetchChats } from '../services/chats/fetchChats';
@@ -19,7 +20,6 @@ import { PopularVideosRelatedToAPT } from '@/components/home/PopularVideosRelate
 
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const generateRandomNickname = () => {
   const nicknames = [
