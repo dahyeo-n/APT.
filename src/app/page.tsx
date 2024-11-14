@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { supabase } from '../lib/supabaseClient';
-import { addChat, fetchChats } from '../services/chats';
+import { fetchChats } from '../services/chats/fetchChats';
+import { addChat } from '@/services/chats/addChat';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chatQueryKeys } from '@/queryKeys';

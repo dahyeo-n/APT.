@@ -3,20 +3,18 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { insertApateuGameData } from '@/services/games/insertApateuGameData';
 import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseClient';
 
-import { MultiPlayerIcon } from '@/components/icons/gamePlayPageIcons/MultiPlayerIcon';
-import { SinglePlayerIcon } from '@/components/icons/gamePlayPageIcons/SinglePlayerIcon';
-import { UserMinusIcon } from '@/components/icons/gamePlayPageIcons/UserMinusIcon';
-import { UserPlusIcon } from '@/components/icons/gamePlayPageIcons/UserPlusIcon';
-import { MinusIcon } from '@/components/icons/gamePlayPageIcons/MinusIcon';
-import { PlusIcon } from '@/components/icons/gamePlayPageIcons/PlusIcon';
+import GameModeButtons from '@/components/gamePlay/GameModeButtons';
+import ParticipantList from '@/components/gamePlay/ParticipantList';
+import FloorNumberAdjustmentButtons from '@/components/gamePlay/FloorNumberAdjustmentButtons';
+import StartGameButton from '@/components/gamePlay/StartGameButton';
 
 import { useTheme } from 'next-themes';
-import { Button, Card } from '@nextui-org/react';
+import { Card } from '@nextui-org/react';
 
-// TODO: 어제 커밋한 스타일링, 기능 PR 올리기
+// TODO: Supabase 테이블명 => 쿼리키처럼 따로 관리 (오타 방지 차원)
 // TODO: 저장된 데이터를 토대로 3D 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
 
 const GamePlayPage = () => {
@@ -30,19 +28,13 @@ const GamePlayPage = () => {
   const { theme } = useTheme();
   const MAX_PARTICIPANTS = 8;
 
-  const insertApateuGameData = async () => {
-    const { error } = await supabase.from('apateu_games').insert({
-      game_mode: gameMode,
-      participants_names: participants,
-      number_of_participants: participants.length,
-      number_of_aparteu_floors: numberOfFloors,
-    });
-
-    if (error) throw new Error('데이터 저장에 실패했습니다.');
-  };
-
   const mutation = useMutation({
-    mutationFn: insertApateuGameData,
+    mutationFn: () =>
+      insertApateuGameData({
+        gameMode,
+        participants,
+        numberOfFloors,
+      }),
   });
 
   const handleAddParticipant = () => {
@@ -90,103 +82,16 @@ const GamePlayPage = () => {
       >
         튜토리얼 보기
       </Link>
-      <div
-        id='game_mode'
-        className='flex w-full max-w-lg rounded-lg bg-zinc-800 text-white'
-      >
-        <button
-          className={`flex justify-center gap-2 flex-1 py-3 rounded-l-lg transition-all duration-300 ${
-            gameMode === 'multi_mode'
-              ? 'bg-indigo-500 hover:bg-indigo-500'
-              : ` ${
-                  theme === 'light' ? 'bg-zinc-300' : 'bg-transparent'
-                } hover:bg-indigo-600`
-          }`}
-          onClick={() => setGameMode('multi_mode')}
-        >
-          <MultiPlayerIcon />
-          여러 명
-        </button>
-        <button
-          className={`flex justify-center gap-2 flex-1 py-3 rounded-r-lg transition-all duration-300 ${
-            gameMode === 'single_mode'
-              ? 'bg-indigo-500 hover:bg-indigo-500'
-              : ` ${
-                  theme === 'light' ? 'bg-zinc-300' : 'bg-transparent'
-                } hover:bg-indigo-600`
-          }`}
-          onClick={() => setGameMode('single_mode')}
-        >
-          <SinglePlayerIcon />
-          혼자
-        </button>
-      </div>
+      <GameModeButtons gameMode={gameMode} setGameMode={setGameMode} />
 
       {gameMode === 'multi_mode' ? (
-        <Card className='w-full p-5 gap-4 text-center rounded-xl shadow-md max-w-lg'>
-          <ul className='space-y-3'>
-            {participants.map((name, index) => (
-              <li
-                key={index}
-                className={`flex items-center justify-between px-4 py-2 rounded-lg
-                ${theme === 'light' ? 'bg-zinc-100' : 'bg-zinc-800'}
-                `}
-              >
-                <div
-                  className={`flex items-center justify-center w-6 h-6 text-sm sm:w-7 sm:h-7 rounded-full
-                  ${
-                    theme === 'light'
-                      ? 'bg-zinc-200 text-zinc-500'
-                      : ' bg-zinc-700 text-zinc-400'
-                  }
-                  `}
-                >
-                  {index + 1}
-                </div>
-                <input
-                  id='participants_names'
-                  className={`bg-transparent ${
-                    theme === 'light' ? 'text-zinc-800' : 'text-zinc-200'
-                  }`}
-                  placeholder='이름을 입력해주세요.'
-                  value={name}
-                  onChange={(e) =>
-                    handleChangeParticipantName(index, e.target.value)
-                  }
-                />
-                <button
-                  className={`p-2 rounded transition-all duration-300 ${
-                    participants.length > 2
-                      ? theme === 'light'
-                        ? 'bg-zinc-300 hover:bg-zinc-500'
-                        : 'bg-zinc-700 hover:bg-zinc-900'
-                      : 'opacity-0 cursor-default'
-                  }`}
-                  onClick={() =>
-                    participants.length > 2 && handleRemoveParticipant(index)
-                  }
-                >
-                  <UserMinusIcon />
-                </button>
-              </li>
-            ))}
-          </ul>
-          <Button
-            className='flex justify-center w-full py-2 text-white bg-indigo-400 rounded-lg transition-all duration-300 hover:bg-indigo-600'
-            onClick={handleAddParticipant}
-            isDisabled={participants.length >= MAX_PARTICIPANTS}
-          >
-            <UserPlusIcon />
-            추가
-          </Button>
-          <span
-            className={`w-full text-center text-sm ${
-              theme === 'light' ? 'text-zinc-600' : 'text-zinc-400'
-            }`}
-          >
-            최대 8명까지 플레이할 수 있어요.
-          </span>
-        </Card>
+        <ParticipantList
+          participants={participants}
+          handleChangeParticipantName={handleChangeParticipantName}
+          handleRemoveParticipant={handleRemoveParticipant}
+          handleAddParticipant={handleAddParticipant}
+          MAX_PARTICIPANTS={MAX_PARTICIPANTS}
+        />
       ) : (
         <span
           className={`w-full text-center p-1 ${
@@ -202,43 +107,19 @@ const GamePlayPage = () => {
           1 이상 50 이하의 층수를 입력해주세요.
         </span>
       )}
-      <div
-        id='number_of_aparteu_floors'
-        className='flex gap-3 px-3 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
-      >
-        <button
-          onClick={() => setNumberOfFloors((prev) => Math.max(prev - 1, 1))}
-          disabled={numberOfFloors < 1}
-        >
-          <MinusIcon />
-        </button>
-        <input
-          value={numberOfFloors}
-          onChange={handleFloorInputChange}
-          min={1}
-          max={50}
-          className='w-6 text-center bg-transparent text-white border-b border-zinc-300 focus:outline-none'
-        />
-        층
-        <button
-          onClick={() => setNumberOfFloors((prev) => prev + 1)}
-          disabled={numberOfFloors >= 50}
-        >
-          <PlusIcon />
-        </button>
-      </div>
-
-      <Button
-        className='w-full py-2 bg-pink-400 text-white rounded-lg sm:py-3 lg:max-w-lg hover:bg-pink-500 shadow-lg'
-        onClick={handleStartGame}
+      <FloorNumberAdjustmentButtons
+        numberOfFloors={numberOfFloors}
+        setNumberOfFloors={setNumberOfFloors}
+        handleFloorInputChange={handleFloorInputChange}
+      />
+      <StartGameButton
+        handleStartGame={handleStartGame}
         isDisabled={
           numberOfFloors < 1 ||
           (gameMode === 'multi_mode' &&
             participants.some((name) => name === ''))
         }
-      >
-        시작하기
-      </Button>
+      />
     </div>
   );
 };
