@@ -1,12 +1,9 @@
+import { GameModeButtonsTypes } from '@/types/GameModeButtonsTypes';
+
 import { MultiPlayerIcon } from '../icons/gamePlayPageIcons/MultiPlayerIcon';
 import { SinglePlayerIcon } from '../icons/gamePlayPageIcons/SinglePlayerIcon';
 
 import { useTheme } from 'next-themes';
-
-export interface GameModeButtonsTypes {
-  gameMode: 'single_mode' | 'multi_mode';
-  setGameMode: (mode: 'single_mode' | 'multi_mode') => void;
-}
 
 const GameModeButtons = ({ gameMode, setGameMode }: GameModeButtonsTypes) => {
   const { theme } = useTheme();
