@@ -37,7 +37,6 @@ const ParticipantList = ({
               {index + 1}
             </div>
             <input
-              id='participants_names'
               className={`bg-transparent ${
                 theme === 'light' ? 'text-zinc-800' : 'text-zinc-200'
               }`}

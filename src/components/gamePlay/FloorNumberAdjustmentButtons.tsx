@@ -9,10 +9,7 @@ const FloorNumberAdjustmentButtons = ({
   handleFloorInputChange,
 }: FloorNumberAdjustmentButtonsTypes) => {
   return (
-    <div
-      id='number_of_aparteu_floors'
-      className='flex gap-3 px-3 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'
-    >
+    <div className='flex gap-3 px-3 py-2 text-white bg-indigo-500 rounded-lg transition-all duration-300 hover:bg-indigo-600 shadow-lg sm:py-3'>
       <button
         onClick={() => setNumberOfFloors((prev) => Math.max(prev - 1, 1))}
         disabled={numberOfFloors < 1}

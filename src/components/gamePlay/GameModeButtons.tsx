@@ -12,10 +12,7 @@ const GameModeButtons = ({ gameMode, setGameMode }: GameModeButtonsTypes) => {
   const { theme } = useTheme();
 
   return (
-    <div
-      id='game_mode'
-      className='flex w-full max-w-lg rounded-lg bg-zinc-800 text-white'
-    >
+    <div className='flex w-full max-w-lg rounded-lg bg-zinc-800 text-white'>
       <button
         className={`flex justify-center gap-2 flex-1 py-3 rounded-l-lg transition-all duration-300 ${
           gameMode === 'multi_mode'

@@ -151,7 +151,7 @@ const UserFeedbackButton = () => {
                     }
                   />
                 </Tabs>
-                <div id='emailInput' className='mb-2'>
+                <div className='mb-2'>
                   <Input
                     isRequired
                     className='mb-2'
@@ -162,17 +162,14 @@ const UserFeedbackButton = () => {
                     placeholder='이메일을 입력해주세요.'
                     onChange={handleEmailChange}
                   />
-                  <div
-                    id='emailCheck'
-                    className={`flex items-center gap-1 ${emailCheckColor}`}
-                  >
+                  <div className={`flex items-center gap-1 ${emailCheckColor}`}>
                     <CheckIcon />
                     <span className='text-xs'>
                       이메일 형식에 맞춰주세요 (example@gmail.com)
                     </span>
                   </div>
                 </div>
-                <div id='contentTextarea'>
+                <div>
                   <div
                     className='group flex flex-col is-filled'
                     data-filled-within='true'
