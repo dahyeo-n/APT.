@@ -1,5 +1,7 @@
 import { supabase } from '../../lib/supabaseClient';
 
+import { SUPABASE_TABLES } from '@/constants/supabaseTables';
+
 import { Chat } from '@/types/chatTypes';
 
 export const addChat = async (
@@ -7,7 +9,7 @@ export const addChat = async (
   nickname: string
 ): Promise<Chat[] | null> => {
   const { data, error } = await supabase
-    .from('anonymous_chats')
+    .from(SUPABASE_TABLES.ANONYMOUS_CHATS)
     .insert([
       {
         nickname,
@@ -18,5 +20,6 @@ export const addChat = async (
     .select('*');
 
   if (error) throw new Error(error.message);
+
   return data;
 };

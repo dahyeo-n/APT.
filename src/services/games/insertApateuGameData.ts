@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabaseClient';
 
+import { SUPABASE_TABLES } from '@/constants/supabaseTables';
+
 import { ApateuGameDataTypes } from '@/types/ApateuGameDataTypes';
 
 export const insertApateuGameData = async ({
@@ -7,7 +9,7 @@ export const insertApateuGameData = async ({
   participants,
   numberOfFloors,
 }: ApateuGameDataTypes) => {
-  const { error } = await supabase.from('apateu_games').insert({
+  const { error } = await supabase.from(SUPABASE_TABLES.APATEU_GAMES).insert({
     game_mode: gameMode,
     participants_names: participants,
     number_of_participants: participants.length,
