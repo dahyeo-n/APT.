@@ -1,9 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
+import Link from 'next/link';
 
 import { insertApateuGameData } from '@/services/games/insertApateuGameData';
+
 import { useMutation } from '@tanstack/react-query';
 
 import GameModeButtons from '@/components/gamePlay/GameModeButtons';
