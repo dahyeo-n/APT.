@@ -1,5 +1,5 @@
 ---
-name: 'Bug Issue | '
+name: Bug Issue
 about: 해결해야 할 버그에 대한 사항
 title: ''
 labels: bug

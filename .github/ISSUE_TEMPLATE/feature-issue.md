@@ -1,5 +1,5 @@
 ---
-name: 'Feature Issue | '
+name: Feature Issue
 about: 기능 추가 및 수정해야 할 사항
 title: ''
 labels: feat
