@@ -41,8 +41,6 @@ const generateRandomNickname = () => {
   return nicknames[Math.floor(Math.random() * nicknames.length)];
 };
 
-// TODO: 접속자 수 전역으로 책정해서 합산되게, 채팅: 변경 즉시 바로바로 UI에 업데이트
-
 export default function HomePage() {
   const { theme } = useTheme();
   const queryClient = useQueryClient();
@@ -92,7 +90,6 @@ export default function HomePage() {
       setNewChat('');
       await refetch();
 
-      // TODO: 최신 댓글로 스크롤 조정 기능 - 더 좋은 방법 강구해보기
       setTimeout(() => {
         if (scrollContainerRef.current) {
           scrollContainerRef.current.scrollTop =
