@@ -37,8 +37,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    # - name: Run Lint
-    #   run: pnpm lint
+    - name: Run Lint
+      run: pnpm lint
 
     - name: Prettier Check
       run: pnpm prettier --check .
@@ -57,7 +57,7 @@ jobs:
       with:
         webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         message: |
-          🚨 **Lint/Build/Test Workflow Failed** 🚨
+          🚨 **Lint/Build/Test Workflow 실패** 🚨
 
           **Repository**: ${{ github.repository }}
           **Branch**: ${{ github.ref_name }}
@@ -65,7 +65,7 @@ jobs:
           **Author**: ${{ github.actor }}
           **Job**: ${{ github.job }}
 
-          ❗ Check the [GitHub Actions Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.
+          ❗ 자세한 내용은 [GitHub Actions Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})를 확인하세요.
 
           ---
           🕒 **Timestamp**: ${{ github.event.head_commit.timestamp }}
