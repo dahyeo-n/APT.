@@ -1,0 +1,49 @@
+name: Lint, Build, and Test
+
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main", "dev"]
+
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Cache Node Modules
+      uses: actions/cache@v4
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Run Lint
+      run: pnpm lint
+
+    - name: Prettier Check
+      run: pnpm prettier --check .
+
+    - name: Build
+      run: pnpm build
+
+    - name: Run Tests
+      run: pnpm test -- --ci
+
+    - name: Notify Discord on Failure
+      if: failure()
+      uses: Ilshidur/action-discord@0.3.2
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+        content: |
+          🚨 Lint/Build/Test Failed!
+          - Job: ${{ github.job }}
+          - Branch: ${{ github.ref_name }}
+          - Commit: ${{ github.sha }}
