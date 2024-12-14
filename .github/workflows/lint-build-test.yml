@@ -2,9 +2,9 @@ name: Lint, Build, and Test
 
 on:
   push:
-    branches: ["main", "dev"]
+    branches: ["main"]
   pull_request:
-    branches: ["main", "dev"]
+    branches: ["main"]
 
 jobs:
   lint-build-test:
@@ -17,7 +17,9 @@ jobs:
     - name: Cache Node Modules
       uses: actions/cache@v4
       with:
-        path: ~/.pnpm-store
+        path: |
+          ~/.pnpm-store
+          node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-node-
@@ -27,9 +29,11 @@ jobs:
       with:
         node-version: 20
         cache: 'pnpm'
-
-    - name: Install pnpm
-      run: npm install -g pnpm
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
 
     - name: Install dependencies
       run: pnpm install
@@ -41,9 +45,11 @@ jobs:
       run: pnpm prettier --check .
 
     - name: Build
+      if: success()
       run: pnpm build
 
     - name: Run Tests
+      if: success()
       run: pnpm test -- --ci
 
     - name: Notify Discord on Failure
@@ -56,3 +62,4 @@ jobs:
           - Job: ${{ github.job }}
           - Branch: ${{ github.ref_name }}
           - Commit: ${{ github.sha }}
+          
