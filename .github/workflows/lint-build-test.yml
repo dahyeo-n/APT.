@@ -53,9 +53,9 @@ jobs:
 
     - name: Notify Discord on Failure
       if: failure()
-      uses: Ilshidur/action-discord@0.3.2
+      uses: johnnyhuy/actions-discord-git-webhook@main
       with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         message: |
           🚨 Lint/Build/Test Failed!
           - Job: ${{ github.job }}
