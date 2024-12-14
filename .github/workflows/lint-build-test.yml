@@ -55,8 +55,8 @@ jobs:
       if: failure()
       uses: Ilshidur/action-discord@0.3.2
       with:
-        webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-        content: |
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        message: |
           🚨 Lint/Build/Test Failed!
           - Job: ${{ github.job }}
           - Branch: ${{ github.ref_name }}
