@@ -1,0 +1,71 @@
+name: PR Review Reminder
+
+on:
+  # 매일 오전 9시 (한국 시간, UTC+9)
+  schedule:
+    - cron: "0 0 * * *" # UTC 기준: 0시 (한국 시간으로 오전 9시)
+
+  workflow_dispatch:
+
+jobs:
+  pr-review-reminder:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fetch Open Pull Requests
+        id: fetch_prs
+        run: |
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            | jq '.[] | {title: .title, url: .html_url, user: .user.login}' > open_prs.json
+          echo "Open PRs fetched successfully."
+
+      - name: Send PR Review Reminders to Discord
+        if: always()
+        run: |
+          open_prs=$(jq -r '.[] | "- [\(.title)](\(.url)) (작성자: \(.user))"' open_prs.json)
+          if [ -z "$open_prs" ]; then
+            open_prs="열려 있는 PR이 없어요! 😎✨"
+          fi
+
+          current_time=$(date '+%Y.%m.%d %H:%M') # 한국 시간 형식으로 날짜와 시간 설정
+          curl -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg content "**저(PR)를 잊었나요..?**\n\n[리뷰하러 가기](https://github.com/${{ github.repository }}/pulls)\n\n$open_prs\n\n---\nMomenia-FE • $current_time" \
+              --arg thumbnail_url "https://t1.daumcdn.net/thumb/R720x0.fgif/?fname=http://t1.daumcdn.net/brunch/service/user/6pbO/image/zIke-jXtA5-XWBt1DNvAZhEVw58.gif" \
+              '{content: $content, embeds: [{"thumbnail": {"url": $thumbnail_url}}]}')" \
+            ${{ secrets.DISCORD_WEBHOOK }}
+
+  dev-branch-merge:
+    needs: pr-review-reminder
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH for Local Merge
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Merge dev into local branches
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+          git fetch origin
+          git checkout dev
+          git pull origin dev
+
+          for branch in $(git branch -r | grep 'origin/' | grep -vE 'HEAD|dev|main' | sed 's/origin\///'); do
+            echo "Merging dev into $branch"
+            git checkout $branch
+            git merge dev || echo "Merge conflict in $branch, skipping."
+            git push origin $branch || echo "Failed to push $branch, check permissions."
+          done
