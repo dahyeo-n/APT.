@@ -1,9 +1,8 @@
 name: PR Review Reminder
 
 on:
-  # 매일 오전 9시 (한국 시간, UTC+9)
   schedule:
-    - cron: "0 0 * * *" # UTC 기준: 0시 (한국 시간으로 오전 9시)
+    - cron: "*/10 * * * *"
 
   workflow_dispatch:
 
