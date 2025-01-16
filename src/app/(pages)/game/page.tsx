@@ -15,8 +15,6 @@ import StartGameButton from '@/components/gamePlay/StartGameButton';
 import { useTheme } from 'next-themes';
 import { Card } from '@nextui-org/react';
 
-// TODO: 저장된 데이터를 토대로 3D 애니메이션을 구현하려면 어떻게 해야 하는지 알아보기
-
 const GamePlayPage = () => {
   const [gameMode, setGameMode] = useState<'single_mode' | 'multi_mode'>(
     'multi_mode'

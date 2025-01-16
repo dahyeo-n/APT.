@@ -35,6 +35,7 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             {chats ? chats.length : 0}개
           </span>
         </CardHeader>
+
         <div className='overflow-y-auto' ref={ref}>
           {(chats ?? []).map((chat) => (
             <CardBody
@@ -82,6 +83,7 @@ export const AnonymousChat = forwardRef<HTMLDivElement, AnonymousChatProps>(
             </CardBody>
           ))}
         </div>
+
         <CardFooter className='px-4'>
           <div className='flex items-center gap-4 w-full'>
             <Avatar
